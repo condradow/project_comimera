@@ -9,6 +9,7 @@ import sc.shared.GameResult;
 
 import java.util.List;
 
+
 /**
  * Das Herz des Clients:
  * Eine simple Logik, die zufaellige gueltige Zuege macht.
@@ -28,9 +29,18 @@ public class Logic implements IGameHandler {
     long startTime = System.currentTimeMillis();
     log.info("Es wurde ein Zug von {} angefordert.", gameState.getCurrentTeam());
 
+    // ### Das hier kann von euch angepasst werden ### //
+    Logic_CWC logic_CWC = new Logic_CWC(gameState);
+    Logic_MG logic_MG = new Logic_MG(gameState);
+    Logic_RDP logic_RDP = new Logic_RDP(gameState);
+
+    // ### hier könnt ihr euren move Hinterlegen, dieser muss returned werden ### //
+    Move ourMove = logic_CWC.calculateMove();
+
+
     List<Move> possibleMoves = gameState.getSensibleMoves();
     // Hier intelligente Strategie zur Auswahl des Zuges einfügen
-    Move move = possibleMoves.get((int) (Math.random() * possibleMoves.size()));
+    Move move = possibleMoves.get((int) (Math.random() * possibleMoves.size())); // <
 
     log.info("Sende {} nach {}ms.", move, System.currentTimeMillis() - startTime);
     return move;

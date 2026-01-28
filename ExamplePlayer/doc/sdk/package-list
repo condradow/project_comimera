@@ -1,0 +1,14 @@
+sc.api.plugins
+sc.api.plugins.exceptions
+sc.api.plugins.host
+sc.framework
+sc.framework.plugins
+sc.networking
+sc.networking.clients
+sc.player
+sc.protocol
+sc.protocol.requests
+sc.protocol.responses
+sc.protocol.room
+sc.shared
+sc.util

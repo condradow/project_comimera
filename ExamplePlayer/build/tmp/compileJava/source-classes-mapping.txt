@@ -1,4 +1,10 @@
+sc/player/Logic_MG.java
+ sc.player.Logic_MG
 sc/player/util/Starter.java
  sc.player.util.Starter
+sc/player/Logic_RDP.java
+ sc.player.Logic_RDP
 sc/player/Logic.java
  sc.player.Logic
+sc/player/Logic_CWC.java
+ sc.player.Logic_CWC

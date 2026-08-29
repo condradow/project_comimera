@@ -1,0 +1,88 @@
+29.08.2026 09:19:40	Dieses Protokoll enthält Informationen über den Importvorgang eines Schemas in das Projekt "WebFormularDatabase" auf dem Computer "DESKTOP-ON8GGS4" durch den Benutzer "Condi".
+29.08.2026 09:19:40	Der Import des Datenbankschemas wurde gestartet.
+29.08.2026 09:19:44	Datenbankanmeldeinformationen werden ermittelt.
+29.08.2026 09:19:44	Datenbankoptionen werden ermittelt.
+29.08.2026 09:19:44	Option zum Erfassen der generischen datenbankweit gültigen Konfiguration
+29.08.2026 09:19:44	Benutzer werden ermittelt.
+29.08.2026 09:19:44	Rollen werden ermittelt.
+29.08.2026 09:19:44	Anwendungsrollen werden ermittelt.
+29.08.2026 09:19:44	Rollenmitgliedschaften werden ermittelt.
+29.08.2026 09:19:44	Dateigruppen werden ermittelt.
+29.08.2026 09:19:44	Volltextkataloge werden ermittelt.
+29.08.2026 09:19:44	Assemblys werden ermittelt.
+29.08.2026 09:19:44	Zertifikate werden ermittelt.
+29.08.2026 09:19:44	Asymmetrische Schlüssel werden ermittelt.
+29.08.2026 09:19:44	Symmetrische Schlüssel werden ermittelt.
+29.08.2026 09:19:44	Verschlüsselte symmetrische Schlüssel werden ermittelt.
+29.08.2026 09:19:44	Schemas werden ermittelt.
+29.08.2026 09:19:44	XML-Schemaauflistungen werden ermittelt.
+29.08.2026 09:19:44	Benutzerdefinierte Datentypen werden ermittelt.
+29.08.2026 09:19:44	Benutzerdefinierte Typen werden ermittelt.
+29.08.2026 09:19:44	Tabellentypen werden ermittelt.
+29.08.2026 09:19:44	Eindeutige Schlüssel für Tabellentypen werden ermittelt
+29.08.2026 09:19:44	Primärschlüssel für Tabellentypen werden ermittelt.
+29.08.2026 09:19:44	Indizes für Tabellentypen werden ermittelt
+29.08.2026 09:19:44	CHECK-Einschränkungen für Tabellentypen werden ermittelt.
+29.08.2026 09:19:44	DEFAULT-Einschränkungen für Tabellentypen werden ermittelt.
+29.08.2026 09:19:44	Partitionsfunktionen werden ermittelt.
+29.08.2026 09:19:44	Partitionsschemas werden ermittelt.
+29.08.2026 09:19:44	Funktionen werden ermittelt.
+29.08.2026 09:19:44	Verschlüsselte Funktionen werden gesammelt.
+29.08.2026 09:19:44	Aggregate werden ermittelt.
+29.08.2026 09:19:44	Prozeduren werden ermittelt.
+29.08.2026 09:19:44	Verschlüsselte Prozeduren werden gesammelt.
+29.08.2026 09:19:44	Tabellen werden ermittelt.
+29.08.2026 09:19:44	Primärschlüssel werden ermittelt.
+29.08.2026 09:19:44	UNIQUE-Einschränkungen werden ermittelt.
+29.08.2026 09:19:44	Fremdschlüssel werden ermittelt.
+29.08.2026 09:19:44	Standardeinschränkungen werden ermittelt.
+29.08.2026 09:19:44	CHECK-Einschränkungen werden ermittelt.
+29.08.2026 09:19:44	Sichten werden ermittelt.
+29.08.2026 09:19:44	Verschlüsselte Sichten werden gesammelt.
+29.08.2026 09:19:44	Indizes werden ermittelt.
+29.08.2026 09:19:44	Statistiken werden ermittelt.
+29.08.2026 09:19:44	Volltextindex-Stopplisten werden ermittelt.
+29.08.2026 09:19:44	Sucheigenschaftenlisten werden ermittelt.
+29.08.2026 09:19:44	Sucheigenschaften werden ermittelt.
+29.08.2026 09:19:44	Volltextindizes werden ermittelt.
+29.08.2026 09:19:44	Columnstore-Indizes werden gesammelt
+29.08.2026 09:19:44	Räumliche Indizes werden ermittelt.
+29.08.2026 09:19:44	XML-Indizes werden ermittelt.
+29.08.2026 09:19:44	Selektive XML-Indexe werden ermittelt.
+29.08.2026 09:19:44	Verschlüsselte Trigger werden gesammelt.
+29.08.2026 09:19:44	Trigger werden ermittelt.
+29.08.2026 09:19:44	Verschlüsselte Trigger und CLR-DDL-Trigger werden ermittelt.
+29.08.2026 09:19:44	DDL-Trigger werden ermittelt.
+29.08.2026 09:19:44	Edgeeinschränkungen werden erstellt.
+29.08.2026 09:19:44	Synonyme werden ermittelt.
+29.08.2026 09:19:44	Standardwerte werden ermittelt.
+29.08.2026 09:19:44	UDDT-Bindungen für Dateneinschränkungen werden gesammelt.
+29.08.2026 09:19:44	Regeln werden ermittelt.
+29.08.2026 09:19:44	UDDT-Bindungen für Dateneinschränkungen werden gesammelt.
+29.08.2026 09:19:44	Nachrichtentypen werden ermittelt.
+29.08.2026 09:19:44	Warteschlangen werden ermittelt.
+29.08.2026 09:19:44	Verträge werden ermittelt.
+29.08.2026 09:19:44	Dienste werden ermittelt.
+29.08.2026 09:19:44	Ereignisbenachrichtigungen werden ermittelt.
+29.08.2026 09:19:44	Remotedienstbindungen werden ermittelt.
+29.08.2026 09:19:44	Broker-Prioritäten werden ermittelt.
+29.08.2026 09:19:44	Signaturen werden ermittelt.
+29.08.2026 09:19:44	Komprimierungsoptionen werden gesammelt
+29.08.2026 09:19:44	Sequenztypen werden ermittelt.
+29.08.2026 09:19:44	Sicherheitsrichtlinien werden ermittelt
+29.08.2026 09:19:44	Verschlüsselungsschlüssel für Spalten werden ermittelt
+29.08.2026 09:19:44	Hauptschlüssel für Spalten werden ermittelt
+29.08.2026 09:19:44	Externe Datenquellen werden gesammelt
+29.08.2026 09:19:44	Externe Dateiformate werden gesammelt
+29.08.2026 09:19:44	Externe Tabellen werden gesammelt
+29.08.2026 09:19:44	Optionen für die XML-Indexkomprimierung werden gesammelt
+29.08.2026 09:19:44	Erweiterte Eigenschaften werden ermittelt.
+29.08.2026 09:19:44	Assemblys werden ermittelt.
+29.08.2026 09:19:44	Anmeldeinformationen werden ermittelt.
+29.08.2026 09:19:44	Anmeldungen werden ermittelt.
+29.08.2026 09:19:44	Serverüberwachungen werden ermittelt.
+29.08.2026 09:19:44	Das Projekt wird auf doppelte Elemente überprüft.
+29.08.2026 09:19:44	Die Verarbeitung doppelter Elemente wurde abgeschlossen.
+29.08.2026 09:19:44	Datenbankimport abgeschlossen.
+29.08.2026 09:19:44	Eine Zusammenfassung des Importvorgangs wurde an folgendem Ort gespeichert: C:\Git\project_comimera\WebFormularDatabase\WebFormularDatabase\Schemaprotokolle importieren\WebFormularDatabase_20260829071940.log
+29.08.2026 09:19:44	Klicken Sie auf "Fertig stellen", um den Vorgang fortzusetzen...

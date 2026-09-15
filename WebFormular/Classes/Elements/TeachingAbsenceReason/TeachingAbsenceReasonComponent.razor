@@ -1,37 +1,52 @@
-﻿
-@using MudBlazor
+﻿@using MudBlazor
 
 <MudPaper Class="pa-4" Outlined="true">
-
-    <MudText Typo="Typo.h6" Class="mb-4">
-        @Model.Title
-    </MudText>
-
-    <MudGrid>
-
-        <MudItem xs="12" md="6">
-            <MudDatePicker Label="Beginn der Abwesenheit"
-                           @bind-Date="BeginDate" />
-        </MudItem>
-
-        <MudItem xs="12" md="6">
-            <MudDatePicker Label="Ende der Abwesenheit"
-                           @bind-Date="EndDate" />
-        </MudItem>
-
+   
+    <MudGrid >
         <MudItem xs="12">
-            <MudCheckBox @bind-Value="Model.MaterialOnTeachingPlatform"
-                         Label="Material auf Teaching Platform" />
+            <MudText Typo="Typo.h6">Unterrichtsorganisation bei Abwesenheit der Lehrkraft</MudText>
+        </MudItem>
+        <MudItem xs="12">
+            <MudText>Ich bin <b>aus dem folgenden Grund</b> verhindert, meinen planmäßigen Unterricht durchzuführen:</MudText>
+        </MudItem>
+        <MudItem xs="12">
+            <MudText Typo="Typo.caption">(Bitte eventuell Anordnung des Dienstgeschäftes bzw. Einladungsschreiben als Kopie beifügen)</MudText>
+        </MudItem>
+        <MudItem xs="4"  class="justify-center align-center d-flex">
+            <MudText  Align="Align.Center" >Beginn der Abwesenheit</MudText>
+        </MudItem>
+        <MudItem xs="4">
+            <MudDatePicker Label="Datum" @bind-Date="BeginDate" />
 
-            <MudCheckBox @bind-Value="Model.MaterialOnLearningPlatform"
-                         Label="Material auf Learning Platform" />
+        </MudItem>
+        <MudItem xs="4">
+            <MudTimePicker Label="Uhrzeit" @bind-Time="BeginTime" />
 
-            <MudCheckBox @bind-Value="Model.MaterialOnMail"
-                         Label="Material per Mail" />
         </MudItem>
 
-    </MudGrid>
+        <MudItem xs="4" class="justify-center align-center d-flex">
+            <MudText Align="Align.Center">Ende der Abwesenheit</MudText>
+        </MudItem>
+        <MudItem xs="4">
+            <MudDatePicker Label="Datum" @bind-Date="EndDate" />
 
+        </MudItem>
+        <MudItem xs="4">
+            <MudTimePicker Label="Uhrzeit" @bind-Time="EndTime" />
+
+        </MudItem>
+   
+        
+        <MudItem xs="4">
+            <MudCheckBox @bind-Value="Model.MaterialOnTeachingPlatform" Label="auf Lernplattform" />
+        </MudItem>
+        <MudItem xs="4">
+            <MudCheckBox @bind-Value="Model.MaterialOnDemand" Label="nach Absprache" />
+        </MudItem>
+        <MudItem xs="4">
+            <MudCheckBox @bind-Value="Model.MaterialOnMail" Label="per Mail" />
+        </MudItem>
+    </MudGrid>
 </MudPaper>
 
 @code {
@@ -57,5 +72,40 @@
             if (value.HasValue)
                 Model.EndAbsence = value.Value;
         }
+    }
+
+    private TimeSpan? EndTime
+    {
+        get => Model.EndAbsence?.TimeOfDay;
+
+        set
+        {
+            if (value.HasValue)
+            {
+                var date = Model.EndAbsence?.Date ?? DateTime.Today;
+                Model.EndAbsence = date + value.Value;
+            }
+        }
+    }
+
+    private TimeSpan? BeginTime
+    {
+        get => Model.BeginAbsence?.TimeOfDay;
+
+        set
+        {
+            if (value.HasValue)
+            {
+                var date = Model.BeginAbsence?.Date ?? DateTime.Today;
+                Model.BeginAbsence = date + value.Value;
+            }
+        }
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        Model.BeginAbsence ??= DateTime.Today;
+        Model.EndAbsence ??= DateTime.Today;
+        return base.OnInitializedAsync();
     }
 }

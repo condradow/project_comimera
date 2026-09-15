@@ -1,0 +1,176 @@
+﻿@page "/create-new-template"
+
+@using WebFormular.Classes
+@using WebFormular.Classes.Elements
+@using WebFormular.Services
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-8">
+
+    <MudText Typo="Typo.h4" Class="mb-2">
+        Neue Dokumentvorlage
+    </MudText>
+
+    <MudText Typo="Typo.body1"
+             Color="Color.Secondary"
+             Class="mb-6">
+        Erstelle eine neue Vorlage und füge die benötigten Elemente hinzu.
+    </MudText>
+
+
+   
+
+    <MudPaper Class="pa-6 mb-6" Outlined="true">
+
+        <MudText Typo="Typo.h6" Class="mb-4">
+            Allgemeine Informationen
+        </MudText>
+
+        <MudGrid>
+
+            <MudItem xs="12">
+                <MudTextField @bind-Value="Template.Title"
+                              Label="Titel"
+                              Variant="Variant.Outlined"
+                              Required="true"
+                              FullWidth="true" />
+            </MudItem>
+
+            <MudItem xs="12">
+                <MudTextField @bind-Value="Template.Description"
+                              Label="Beschreibung"
+                              Variant="Variant.Outlined"
+                              Lines="3"
+                              FullWidth="true" />
+            </MudItem>
+
+        </MudGrid>
+
+    </MudPaper>
+
+
+    @* =========================
+       ELEMENT HINZUFÜGEN
+       ========================= *@
+
+    <MudPaper Class="pa-6 mb-6" Outlined="true">
+
+        <MudText Typo="Typo.h6" Class="mb-4">
+            Element hinzufügen
+        </MudText>
+
+        <MudGrid>
+
+            <MudItem xs="12" md="8">
+
+                <MudSelect T="ElementDefinition"
+                           @bind-Value="SelectedDefinition"
+                           Label="Element auswählen"
+                           Variant="Variant.Outlined"
+                           FullWidth="true">
+
+                    @foreach (var definition in ElementRegistry.Elements)
+                    {
+                        <MudSelectItem T="ElementDefinition"
+                                       Value="@definition">
+                            @definition.Name
+                        </MudSelectItem>
+                    }
+
+                </MudSelect>
+
+            </MudItem>
+
+            <MudItem xs="12" md="4">
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Add"
+                           FullWidth="true"
+                           OnClick="AddElement"
+                           Disabled="@(SelectedDefinition is null)">
+
+                    Hinzufügen
+
+                </MudButton>
+
+            </MudItem>
+
+        </MudGrid>
+
+    </MudPaper>
+
+
+    @* =========================
+       ELEMENTE
+       ========================= *@
+
+    <MudText Typo="Typo.h5" Class="mb-4">
+        Elemente
+    </MudText>
+
+    @if (Template.Elements.Count == 0)
+    {
+        <MudPaper Class="pa-8 text-center"
+                  Outlined="true">
+
+            <MudIcon Icon="@Icons.Material.Filled.AddBox"
+                     Size="Size.Large"
+                     Color="Color.Secondary" />
+
+            <MudText Typo="Typo.body1"
+                     Class="mt-3"
+                     Color="Color.Secondary">
+                Noch keine Elemente hinzugefügt.
+            </MudText>
+
+        </MudPaper>
+    }
+    else
+    {
+        @for (var i = 0; i < Template.Elements.Count; i++)
+        {
+            var index = i;
+            var element = Template.Elements[index];
+
+            <MudPaper Class="pa-4 mb-4" Elevation="2">
+
+                <div class="d-flex justify-space-between align-center mb-4">
+
+                    <MudText Typo="Typo.subtitle1">
+                        Element @(index + 1)
+                    </MudText>
+
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   Color="Color.Error"
+                                   OnClick="@(() => RemoveElement(index))" />
+
+                </div>
+
+                <DynamicComponent Type="@GetComponentType(element)"
+                                  Parameters="@GetParameters(element)" />
+
+            </MudPaper>
+        }
+    }
+
+
+    @* =========================
+       SPEICHERN
+       ========================= *@
+
+    <div class="d-flex justify-end mt-6 mb-10">
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Large"
+                   StartIcon="@Icons.Material.Filled.Save"
+                   OnClick="SaveTemplate">
+
+            Vorlage speichern
+
+        </MudButton>
+
+    </div>
+
+</MudContainer>
+

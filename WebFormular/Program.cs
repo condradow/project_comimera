@@ -1,5 +1,6 @@
 using MudBlazor.Services;
 using WebFormular.Components;
+using WebFormular.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,14 @@ builder.Services.AddMudServices();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddScoped<DatabaseContext>(sp =>
+{
+    var connectionString =
+        builder.Configuration.GetConnectionString("DefaultConnection")
+        ?? throw new InvalidOperationException("ConnectionString fehlt.");
 
+    return new DatabaseContext(connectionString);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,4 +1,4 @@
-﻿namespace WebFormular.Components.Classes
+﻿namespace WebFormular.Classes
 {
     public class User
     {

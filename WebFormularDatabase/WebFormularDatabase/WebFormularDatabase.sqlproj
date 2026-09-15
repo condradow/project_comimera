@@ -65,5 +65,7 @@
     <Build Include="dbo\Tables\Users.sql" />
     <Build Include="dbo\Tables\Elements.sql" />
     <Build Include="dbo\Tables\Documents.sql" />
+    <Build Include="dbo\Tables\Templates.sql" />
+    <Build Include="dbo\Tables\TemplateElements.sql" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,6 @@
-﻿using WebFormular.Classes.Elements.TeachingAbsenceReason;
+﻿using WebFormular.Classes.Elements.ApplicantLessonChangeRequest;
+using WebFormular.Classes.Elements.LessonArrangementForAbsentClass;
+using WebFormular.Classes.Elements.TeachingAbsenceReason;
 
 public record ElementDefinition(
     string Name,
@@ -13,15 +15,21 @@ public static class ElementRegistry
             "Unterrichtsabwesenheit",
             typeof(TeachingAbsenceReason),
             typeof(TeachingAbsenceReasonComponent)
-        )
+        ),
 
-        // Später einfach:
-        //
-        // new(
-        //     "Freitext",
-        //     typeof(TextElement),
-        //     typeof(TextElementComponent)
-        // ),
+         
+
+
+         new(
+             "Unterrichtstausch",
+             typeof(ApplicantLessonChangeRequest),
+             typeof(ApplicantLessonChangeRequestComponent)
+         ),new(
+             "Unterrichtsorganisation bei Abwesenheit der Klasse",
+             typeof(LessonArrangementForAbsentClass),
+             typeof(LessonArrangementForAbsentClassComponent)
+         )
+        //,
         //
         // new(
         //     "Datum",

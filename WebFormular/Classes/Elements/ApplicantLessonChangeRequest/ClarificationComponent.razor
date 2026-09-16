@@ -1,0 +1,45 @@
+﻿@using MudBlazor
+@using WebFormular.Enum
+<MudPaper class="pa-1 ma-1" Elevation="0">
+    <MudStack Spacing="1">
+        <MudGrid>
+            <MudItem xs="12" md="6">
+                <MudStack Row Spacing="1">
+                    <MudDatePicker @bind-Date="clarification.Date" Label="Datum" IconSize="Size.Small" Variant="Variant.Text" />
+                    <MudSelect T="Weekdays?" @bind-Value="clarification.Weekday" ToStringFunc="@(x => x?.GetDisplayName() ?? x.ToString())" Label="Tag" Variant="Variant.Text">
+                        @foreach (var weekday in Enum.GetValues<Weekdays>())
+                        {
+                            <MudSelectItem Value="@((Weekdays?)weekday)">
+                                @weekday.GetDisplayName()
+                            </MudSelectItem>
+                        }
+                        <MudNumericField T="int?" @bind-Value="clarification.TeachingPeriod" Label="U-Std" Variant="Variant.Text" Min="1" />
+                        <MudNumericField T="int?" @bind-Value="clarification.RoomNumber1" Label="Raum" Variant="Variant.Text" Min="1" />
+
+                    </MudSelect>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudStack Row Spacing="1"> 
+                    <MudSelect T="LessonChangeRequestType?"
+                               @bind-Value="clarification.SelectedType" ToStringFunc="@(x => x?.GetDisplayName() ?? x.ToString())" Label="Bemerkung" Variant="Variant.Text" Dense="true" Clearable="true">
+                        @foreach (var type in Enum.GetValues<LessonChangeRequestType>())
+                        {
+                            <MudSelectItem Value="@((LessonChangeRequestType?)type)">
+                                @type.GetDisplayName()
+                            </MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudDatePicker @bind-Date="clarification.SelectedDate" IconSize="Size.Small" Label="am" Variant="Variant.Text" />
+                    <MudNumericField T="int?" @bind-Value="clarification.SelectedTeachingPeriod" Label="U-Std" Variant="Variant.Text" Min="1" />
+                </MudStack>
+            </MudItem>
+        </MudGrid>
+    </MudStack>
+</MudPaper>
+@code {
+
+    [Parameter, EditorRequired]
+    public ApplicantLessonChangeRequestClarification clarification { get; set; }
+
+}

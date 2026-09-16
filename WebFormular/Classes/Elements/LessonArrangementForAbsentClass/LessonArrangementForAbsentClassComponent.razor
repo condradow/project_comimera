@@ -1,0 +1,34 @@
+﻿@using MudBlazor
+<MudPaper class="pa-4" Outlined>
+    <MudGrid>
+
+        <MudItem xs="12">
+            <MudCheckBox @bind-Checked="Model.InfoToPersonel" T="Boolean">
+                Info an freigesetzte Lehrkräfte (per Email oder persönlich durch Klassenlehrer*in)
+            </MudCheckBox>
+
+        </MudItem>
+        <MudItem xs="2">
+            <MudCheckBox T="Boolean" @bind-checked=""></MudCheckBox>
+
+        </MudItem>
+        <MudItem xs="10">
+            <MudStack Row>
+                <MudTextField @bind-Value="Model.AffectedClassOrPart" Label="Klasse/Klassenteil"></MudTextField>
+                <MudTextField @bind-Value="Model.AffectedReasoning" Label="Grund(z.B. Prüfung, ÜLU)"></MudTextField>
+            </MudStack>
+        </MudItem>
+        <MudItem xs="12">
+            <MudStack Row>
+                   <MudText></MudText>
+                   <MudDatePicker></MudDatePicker>
+            </MudStack>
+        </MudItem>
+
+        <MudItem xs="12">
+
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+

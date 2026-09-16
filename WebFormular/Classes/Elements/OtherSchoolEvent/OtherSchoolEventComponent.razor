@@ -3,13 +3,15 @@
 <MudPaper Class="pa-4" Outlined>
 
     <MudGrid Spacing="1">
-
-        <!-- Art der Veranstaltung / Fahrt -->
-
         <MudItem xs="12">
             <MudText Typo="Typo.caption" Color="Color.Error">Kann man hier nur 1 Auswählen? dann könnte man hierraus ein select machen</MudText>
 
         </MudItem>
+        <!-- Art der Veranstaltung / Fahrt -->
+        <MudItem xs="12">
+            <MudText>Sonstige Veranstaltungen</MudText>
+        </MudItem>
+        
         <MudItem xs="6" class="pa-0">
             <MudCheckBox @bind-Checked="Model.Project"
                          T="Boolean">

@@ -1,0 +1,50 @@
+﻿@using System.Text
+<MudPaper Outlined>
+    @if (Signature.Length < 1)
+    {
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth OnClick="@ToggleOpen">
+            Unterschreiben
+        </MudButton>
+    }
+    else
+    {
+
+        <div onclick="@ToggleOpen">
+            <MudImage Fluid Src="@($"{System.Text.Encoding.UTF8.GetString(Signature)}")" Alt="Unterschrift" />
+        </div>
+    }
+</MudPaper>
+<MudPopover Open="@_open" Fixed="true" Class="px-4 pt-4">
+    <div class="d-flex flex-column">
+        <SignaturePad Value="@Signature"ValueChanged="@SignatureChangedHandler"style="width: 100%"Options="_options"/>
+        <MudButton OnClick="@ToggleOpen"Class="ml-auto mr-n3 mb-1"Color="Color.Error">Close</MudButton>
+    </div>
+</MudPopover>
+
+@code {
+    [Parameter, EditorRequired]
+    public byte[] Signature { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<byte[]> SignatureChanged { get; set; }
+
+    private bool _open;
+
+    private void ToggleOpen() => _open = !_open;
+
+    private async Task SignatureChangedHandler(byte[] value)
+    {
+        Signature = value;
+
+        // Änderung an Parent weitergeben
+        await SignatureChanged.InvokeAsync(value);
+    }
+
+    private SignaturePadOptions _options = new SignaturePadOptions
+    {
+        LineCap = LineCap.Round,
+        LineJoin = LineJoin.Round,
+        LineWidth = 2,
+        StrokeStyle = System.Drawing.Color.Blue
+    };
+}

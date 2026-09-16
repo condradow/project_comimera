@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Components;
 
-namespace WebFormular.Classes.Elements.LessonArrangementForAbsentClass
+namespace WebFormular.Classes.Elements.OffSiteSchoolEvent
 {
-    public partial class LessonArrangementForAbsentClassComponent
+    public partial class OffSiteSchoolEventComponent
     {
         [Parameter, EditorRequired]
-        public LessonArrangementForAbsentClass Model { get; set; } = null!;
+        public OffSiteSchoolEvent Model { get; set; } = null!;
 
-        //TODO könnte man auslagern, wird an mehreren stellen verwendet.
         private DateTime? BeginDate
         {
             get => Model.BeginAbsence;

@@ -1,16 +1,13 @@
 ﻿@using MudBlazor
 <MudPaper class="pa-4" Outlined>
     <MudGrid>
-
         <MudItem xs="12">
             <MudCheckBox @bind-Checked="Model.InfoToPersonel" T="Boolean">
                 Info an freigesetzte Lehrkräfte (per Email oder persönlich durch Klassenlehrer*in)
             </MudCheckBox>
-
         </MudItem>
         <MudItem xs="2">
             <MudCheckBox T="Boolean" @bind-checked=""></MudCheckBox>
-
         </MudItem>
         <MudItem xs="10">
             <MudStack Row>
@@ -18,15 +15,23 @@
                 <MudTextField @bind-Value="Model.AffectedReasoning" Label="Grund(z.B. Prüfung, ÜLU)"></MudTextField>
             </MudStack>
         </MudItem>
-        <MudItem xs="12">
-            <MudStack Row>
-                   <MudText></MudText>
-                   <MudDatePicker></MudDatePicker>
-            </MudStack>
+        <MudItem xs="4" md="2">
+            <MudText>Beginn der Abwesenheit:</MudText>
         </MudItem>
-
-        <MudItem xs="12">
-
+        <MudItem xs="4" md="2">
+            <MudDatePicker Label="Datum" @bind-Date="BeginDate" />
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudTimePicker Label="Uhrzeit" @bind-Time="BeginTime" />
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudText>Ende der Abwesenheit:</MudText>
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudDatePicker Label="Datum" @bind-Date="EndDate" />
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudTimePicker Label="Uhrzeit" @bind-Time="EndTime" />
         </MudItem>
     </MudGrid>
 </MudPaper>

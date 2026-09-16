@@ -1,0 +1,13 @@
+﻿@using MudBlazor
+ <MudGrid>
+        <MudItem xs="12">
+            <MudCheckBox @bind-Checked="Model.InfoToPersonel" T="Boolean">
+            Info an freigesetzte Lehrkräfte (per Email oder persönlich durch antragstellende LK)
+            </MudCheckBox>
+        </MudItem>
+      
+    </MudGrid>
+@code {
+    [Parameter, EditorRequired]
+    public LessonArrangementForAbsentClassAndTeacher Model { get; set; } = null!;
+}

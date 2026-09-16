@@ -16,6 +16,7 @@
 
 
   <ItemGroup>
+    <Folder Include="Components\UI\" />
     <Folder Include="Components\Pages\CreationPage\" />
   </ItemGroup>
 </Project>

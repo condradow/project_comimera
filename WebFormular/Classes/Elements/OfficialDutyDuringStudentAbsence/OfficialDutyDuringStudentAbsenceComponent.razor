@@ -1,0 +1,20 @@
+﻿@using MudBlazor
+<h3>OfficialDutyDuringStudentAbsenceComponent</h3>
+
+<MudPaper class="pa-4" Outlined>
+    <OfficialDutyDuringStudentAbsenceClarificationComponent model="Model.Entry1" />
+    <MudDivider/>
+    <OfficialDutyDuringStudentAbsenceClarificationComponent model="Model.Entry2" />
+    <MudDivider/>
+    <OfficialDutyDuringStudentAbsenceClarificationComponent model="Model.Entry3" />
+    <MudDivider/>
+    <OfficialDutyDuringStudentAbsenceClarificationComponent model="Model.Entry4" />
+    <MudDivider/>
+    <OfficialDutyDuringStudentAbsenceClarificationComponent model="Model.Entry5" />
+</MudPaper>
+
+
+@code {
+    [Parameter, EditorRequired]
+    public OfficialDutyDuringStudentAbsence Model { get; set; } = null!;
+}

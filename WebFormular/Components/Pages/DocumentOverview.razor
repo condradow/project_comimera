@@ -1,0 +1,188 @@
+﻿@page "/document-overview"
+@using WebFormular.Classes
+@using WebFormular.Services
+@inject DatabaseContext DbContext
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-8">
+
+    <MudStack Row="true"
+              Justify="Justify.SpaceBetween"
+              AlignItems="AlignItems.Center"
+              Class="mb-6">
+
+        <div>
+            <MudText Typo="Typo.h4">
+                Dokumente
+            </MudText>
+
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Übersicht aller vorhandenen Dokumente
+            </MudText>
+        </div>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add"
+                   Href="/document/new">
+            Neues Dokument
+        </MudButton>
+
+    </MudStack>
+
+    <MudPaper Elevation="1" Class="pa-4">
+
+        <MudTextField @bind-Value="SearchString"
+                      Placeholder="Dokumente durchsuchen..."
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Immediate="true"
+                      Clearable="true"
+                      Class="mb-4" />
+
+        <MudDataGrid T="DocumentBase"
+                     Items="@Documents"
+                     Filterable="true"
+                     SortMode="SortMode.Multiple"
+                     FilterMode="DataGridFilterMode.ColumnFilterMenu"
+                     Dense="false"
+                     Hover="true"
+                     Striped="true"
+                     QuickFilter="@QuickFilter">
+
+            <Columns>
+
+                <PropertyColumn Property="x => x.Title"
+                                Title="Titel" />
+
+                <PropertyColumn Property="x => x.Teacher"
+                                Title="Lehrer" />
+
+                <PropertyColumn Property="x => x.CreatedOn"
+                                Title="Erstellt"
+                                Format="dd.MM.yyyy HH:mm" />
+
+                <PropertyColumn Property="x => x.ModifiedOn"
+                                Title="Bearbeitet"
+                                Format="dd.MM.yyyy HH:mm" />
+
+                <TemplateColumn Title="Untis">
+                    <CellTemplate>
+                        <MudIcon Icon="@(context.Item.IsInUntis
+                                                                  ? Icons.Material.Filled.CheckCircle
+                                                              : Icons.Material.Filled.Cancel)"
+                                 Color="@(context.Item.IsInUntis
+                                                                   ? Color.Success
+                                                                   : Color.Default)" />
+                    </CellTemplate>
+                </TemplateColumn>
+
+                <TemplateColumn Title="Vertretung">
+                    <CellTemplate>
+                        <MudIcon Icon="@(context.Item.ApprovedBySubstitue
+                                                                  ? Icons.Material.Filled.CheckCircle
+                                                              : Icons.Material.Filled.Schedule)"
+                                 Color="@(context.Item.ApprovedBySubstitue
+                                                                   ? Color.Success
+                                                                   : Color.Warning)" />
+                    </CellTemplate>
+                </TemplateColumn>
+
+                <TemplateColumn Title="Schulleitung">
+                    <CellTemplate>
+                        <MudIcon Icon="@(context.Item.ApprovedByPrincipal
+                                                                  ? Icons.Material.Filled.CheckCircle
+                                                              : Icons.Material.Filled.Schedule)"
+                                 Color="@(context.Item.ApprovedByPrincipal
+                                                                   ? Color.Success
+                                                                   : Color.Warning)" />
+                    </CellTemplate>
+                </TemplateColumn>
+
+                <TemplateColumn Title="" Sortable="false" Filterable="false">
+                    <CellTemplate>
+
+                        <MudIconButton Icon="@Icons.Material.Filled.Visibility"
+                                       Color="Color.Primary"
+                                       Size="Size.Small"
+                                       Href="@($"/document/{context.Item.Id}")" />
+
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                       Size="Size.Small"
+                                       Href="@($"/document/{context.Item.Id}/edit")" />
+
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                       Color="Color.Error"
+                                       Size="Size.Small"
+                                       OnClick="@(() => DeleteDocument(context.Item))" />
+
+                    </CellTemplate>
+                </TemplateColumn>
+
+            </Columns>
+
+            <PagerContent>
+                <MudDataGridPager T="DocumentBase" />
+            </PagerContent>
+
+            <NoRecordsContent>
+                <MudText Class="pa-4">
+                    Keine Dokumente gefunden.
+                </MudText>
+            </NoRecordsContent>
+
+        </MudDataGrid>
+
+    </MudPaper>
+
+</MudContainer>
+
+
+@code {
+    private List<DocumentBase> Documents { get; set; } = [];
+    private string SearchString { get; set; } = string.Empty;
+
+    private Func<DocumentBase, bool> QuickFilter => document =>
+    {
+        if (string.IsNullOrWhiteSpace(SearchString))
+            return true;
+
+        if (document.Title?.Contains(
+                SearchString,
+                StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (document.Description?.Contains(
+                SearchString,
+                StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (document.CreatedBy?.Contains(
+                SearchString,
+                StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (document.ModifiedBy?.Contains(
+                SearchString,
+                StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        return false;
+    };
+
+    private async Task DeleteDocument(DocumentBase document)
+    {
+        // Später DatabaseService aufrufen
+
+        // await Database.DeleteDocumentAsync(document.Id);
+
+        Documents.Remove(document);
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.Documents = await DbContext.GetAllAsync();
+    }
+
+
+}

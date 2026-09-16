@@ -1,0 +1,165 @@
+﻿@page "/login"
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="login-container">
+    <MudPaper Elevation="8" Class="pa-8 login-card">
+
+        <div class="text-center mb-6">
+            <MudIcon Icon="@Icons.Material.Filled.Lock"
+                     Color="Color.Primary"
+                     Size="Size.Large"
+                     Class="mb-3" />
+
+            <MudText Typo="Typo.h4" Class="font-weight-bold">
+                Willkommen zurück
+            </MudText>
+
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Melde dich an, um fortzufahren
+            </MudText>
+        </div>
+
+        <MudForm @ref="_form">
+            <MudTextField @bind-Value="_email"
+                          Label="E-Mail"
+                          Variant="Variant.Outlined"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Email"
+                          InputType="InputType.Email"
+                          Required="true"
+                          RequiredError="Bitte E-Mail eingeben"
+                          Class="mb-4" />
+
+            <MudTextField @bind-Value="_password"
+                          Label="Passwort"
+                          Variant="Variant.Outlined"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Lock"
+                          InputType="@(_showPassword
+                              ? InputType.Text
+                              : InputType.Password)"
+                          Required="true"
+                          RequiredError="Bitte Passwort eingeben"
+                          Class="mb-2">
+
+                <AdornmentEnd>
+                    <MudIconButton Icon="@(_showPassword
+                        ? Icons.Material.Filled.VisibilityOff
+                        : Icons.Material.Filled.Visibility)"
+                        OnClick="TogglePassword"
+                        Edge="Edge.End" />
+                </AdornmentEnd>
+
+            </MudTextField>
+
+            <div class="d-flex justify-end mb-5">
+                <MudLink Href="/forgot-password">
+                    Passwort vergessen?
+                </MudLink>
+            </div>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       FullWidth="true"
+                       OnClick="Login"
+                       Disabled="_isLoading">
+
+                @if (_isLoading)
+                {
+                    <MudProgressCircular Class="mr-2"
+                                         Size="Size.Small"
+                                         Indeterminate="true" />
+                    <span>Anmelden...</span>
+                }
+                else
+                {
+                    <span>Anmelden</span>
+                }
+            </MudButton>
+        </MudForm>
+
+        <div class="divider">
+            <MudDivider />
+            <MudText Typo="Typo.caption"
+                     Color="Color.Secondary"
+                     Class="px-3">
+                oder
+            </MudText>
+            <MudDivider />
+        </div>
+
+        <MudButton Variant="Variant.Outlined"
+                   Color="Color.Default"
+                   Size="Size.Large"
+                   FullWidth="true"
+                   StartIcon="@Icons.Material.Filled.PersonAdd"
+                   Href="/register">
+            Konto erstellen
+        </MudButton>
+
+    </MudPaper>
+</MudContainer>
+
+<style>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 440px;
+        border-radius: 16px;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 24px 0;
+    }
+
+    .divider .mud-divider {
+        flex: 1;
+    }
+</style>
+
+@code {
+    private MudForm? _form;
+
+    private string _email = string.Empty;
+    private string _password = string.Empty;
+
+    private bool _showPassword;
+    private bool _isLoading;
+
+    private void TogglePassword()
+    {
+        _showPassword = !_showPassword;
+    }
+
+    private async Task Login()
+    {
+        await _form!.Validate();
+
+        if (!_form.IsValid)
+            return;
+
+        _isLoading = true;
+
+        try
+        {
+            // Hier deine Authentifizierung einbauen
+            await Task.Delay(1000);
+
+            // Beispiel:
+            // NavigationManager.NavigateTo("/");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+}

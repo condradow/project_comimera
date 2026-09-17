@@ -1,0 +1,23 @@
+﻿@using MudBlazor
+@using WebFormular.Components.UI
+
+
+
+<MudGrid>
+    <MudItem xs="4">
+        <SingatureComponent @bind-Signature="Model.SignatureClassTeacher" />
+        <MudText>Klassenlehrer/in</MudText>
+    </MudItem>
+    <MudItem xs="4">
+        <SingatureComponent @bind-Signature="Model.SignaturePetitioner" />
+        <MudText>Antragsteller/in</MudText>
+    </MudItem>
+    <MudItem xs="4">
+        <SingatureComponent @bind-Signature="Model.SignatureDepartmentHead" />
+        <MudText>Abteilungsleiter/in</MudText>
+    </MudItem>
+</MudGrid>
+@code {
+    [Parameter, EditorRequired]
+    public FinalSigningElement Model { get; set; } = null!;
+}

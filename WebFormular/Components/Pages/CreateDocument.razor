@@ -1,6 +1,11 @@
 ﻿@page "/create-document"
 @using WebFormular.Classes
+@using WebFormular.Components.Pages.Documents
 @inject NavigationManager NavigationManager
+@if (!FillOutMode)
+{
+    
+
 <MudGrid style="height:100%">
     <MudItem xs="6">
 
@@ -57,9 +62,14 @@
         </MudPaper>
                 <MudText>@SelectedDocument.Title</MudText>
             <MudText>@SelectedDocument.Description</MudText>
-            <MudButton Color="Color.Primary" Variant="Variant.Filled">Ausfüllen</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="ToggleFillOutMode">Ausfüllen</MudButton>
 
         }
     </MudItem>
 </MudGrid>
-
+}
+else
+{
+    <FillOutPage Document="SelectedDocument"></FillOutPage>
+    <MudButton Variant="Variant.Filled" OnClick="ToggleFillOutMode">zurück</MudButton>
+}

@@ -1,4 +1,5 @@
 ﻿using WebFormular.Classes.Elements.ApplicantLessonChangeRequest;
+using WebFormular.Classes.Elements.FinalSigningElement;
 using WebFormular.Classes.Elements.LessonArrangementForAbsentClass;
 using WebFormular.Classes.Elements.LessonArrangementForAbsentClassAndTeacher;
 using WebFormular.Classes.Elements.OfficialDutyDuringStudentAbsence;
@@ -48,7 +49,11 @@ public static class ElementRegistry
              "5. Anderweitige dienstliche Tätigkeit auf Anordnung des SL bei Abwesenheit der\r\nSuS (vgl. MArbErl SL Pkt 3.3)",
              typeof(OfficialDutyDuringStudentAbsence),
              typeof(OfficialDutyDuringStudentAbsenceComponent)
-         )
+         ),new(
+        "Unterschriften von KL AT und AL",
+        typeof(FinalSigningElement),
+        typeof(FinalSigningElementComponent)
+        )
         //,
         //
         // new(

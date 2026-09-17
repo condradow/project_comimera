@@ -1,0 +1,64 @@
+﻿@using WebFormular.Classes
+@using WebFormular.Classes.Elements
+@if (Document.Elements.Count == 0)
+{
+    <MudPaper Class="pa-8 text-center"
+              Outlined="true">
+
+        <MudIcon Icon="@Icons.Material.Filled.AddBox"
+                 Size="Size.Large"
+                 Color="Color.Secondary" />
+
+        <MudText Typo="Typo.body1"
+                 Class="mt-3"
+                 Color="Color.Secondary">
+            Noch keine Elemente hinzugefügt.
+        </MudText>
+
+    </MudPaper>
+}
+else
+{
+    @for (var i = 0; i < Document.Elements.Count; i++)
+    {
+        var index = i;
+        var element = Document.Elements[index];
+            
+        <MudPaper Class="pt-3" Elevation="0">
+
+            
+                    <DynamicComponent Type="@GetComponentType(element)"
+                                      Parameters="@GetParameters(element)" />
+                    
+
+             
+              
+        </MudPaper>
+    }
+    
+}
+
+
+@code {
+    [Parameter,EditorRequired]
+    public DocumentBase Document { get; set; }
+    private Type GetComponentType(ElementBase element)
+    {
+        var definition = ElementRegistry.Elements
+            .FirstOrDefault(x => x.ModelType == element.GetType());
+
+        if (definition is null)
+            throw new InvalidOperationException(
+                $"Für {element.GetType().Name} wurde keine Komponente registriert.");
+
+        return definition.ComponentType;
+    }
+    
+    private Dictionary<string, object?> GetParameters(ElementBase element)
+    {
+        return new Dictionary<string, object?>
+        {
+            ["Model"] = element
+        };
+    }
+}

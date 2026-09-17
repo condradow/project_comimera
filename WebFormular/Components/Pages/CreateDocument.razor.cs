@@ -1,6 +1,14 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using WebFormular.Classes;
+using WebFormular.Classes.Elements.ApplicantLessonChangeRequest;
+using WebFormular.Classes.Elements.FinalSigningElement;
+using WebFormular.Classes.Elements.LessonArrangementForAbsentClass;
+using WebFormular.Classes.Elements.LessonArrangementForAbsentClassAndTeacher;
+using WebFormular.Classes.Elements.OfficialDutyDuringStudentAbsence;
+using WebFormular.Classes.Elements.OffSiteSchoolEvent;
+using WebFormular.Classes.Elements.OtherSchoolEvent;
+using WebFormular.Classes.Elements.TeachingAbsenceReason;
 
 namespace WebFormular.Components.Pages
 {
@@ -18,9 +26,9 @@ namespace WebFormular.Components.Pages
         IsInUntis = true,
         ApprovedBySubstitue = true,
         ApprovedByPrincipal = true,
-        Title = "Klassenfahrt Berlin",
-        Description = "Antrag und Planung für die Klassenfahrt nach Berlin.",
-        Elements = []
+        Title = "Unterrichtsvertretung aus dienstlichen Gründen",
+        Description = "",
+        Elements = [new TeachingAbsenceReason(),new FinalSigningElement()]
     },
     new()
     {
@@ -32,9 +40,9 @@ namespace WebFormular.Components.Pages
         IsInUntis = true,
         ApprovedBySubstitue = true,
         ApprovedByPrincipal = false,
-        Title = "Fortbildung",
-        Description = "Teilnahme an einer externen Lehrerfortbildung.",
-        Elements = []
+        Title = "Dienstbefreiung nach §14 Abs. 1 Urlaubsverordnung",
+        Description = "",
+        Elements = [new TeachingAbsenceReason(),new FinalSigningElement()]
     },
     new()
     {
@@ -46,9 +54,9 @@ namespace WebFormular.Components.Pages
         IsInUntis = false,
         ApprovedBySubstitue = true,
         ApprovedByPrincipal = false,
-        Title = "Dienstliche Tätigkeit",
-        Description = "Anderweitige dienstliche Tätigkeit auf Anordnung der Schulleitung.",
-        Elements = []
+        Title = "Dienstbefreiung für Fortbildungsveranstaltung",
+        Description = "",
+        Elements = [new TeachingAbsenceReason(),new FinalSigningElement()]
     },
     new()
     {
@@ -60,9 +68,9 @@ namespace WebFormular.Components.Pages
         IsInUntis = false,
         ApprovedBySubstitue = false,
         ApprovedByPrincipal = false,
-        Title = "Schulveranstaltung",
-        Description = "Schulveranstaltung an einem außerschulischen Lernort.",
-        Elements = []
+        Title = "Unterrichtsverlegung aus privaten Gründen",
+        Description = "",
+        Elements = [new TeachingAbsenceReason(),new ApplicantLessonChangeRequest(),new FinalSigningElement()]
     },
     new()
     {
@@ -74,10 +82,38 @@ namespace WebFormular.Components.Pages
         IsInUntis = true,
         ApprovedBySubstitue = true,
         ApprovedByPrincipal = true,
-        Title = "Exkursion Saarbrücken",
-        Description = "Tagesexkursion mit der Klasse nach Saarbrücken.",
-        Elements = []
-    }
+        Title = "Unterrichtstausch",
+        Description = "",
+        Elements = [new TeachingAbsenceReason(),new ApplicantLessonChangeRequest(),new FinalSigningElement()]
+    },
+     new()
+     {
+         Id = Guid.NewGuid(),
+         CreatedOn = DateTime.Now.AddDays(-2),
+         CreatedBy = "Michael Becker",
+         ModifiedOn = DateTime.Now,
+         ModifiedBy = "Schulleitung",
+         IsInUntis = true,
+         ApprovedBySubstitue = true,
+         ApprovedByPrincipal = true,
+         Title = "Unterrichtsvertretung wegen Veranstaltun",
+         Description = "",
+         Elements = [new LessonArrangementForAbsentClassAndTeacher(),new OffSiteSchoolEvent(),new OtherSchoolEvent(),new OfficialDutyDuringStudentAbsence(),new FinalSigningElement()]
+     },
+     new()
+     {
+         Id = Guid.NewGuid(),
+         CreatedOn = DateTime.Now.AddDays(-2),
+         CreatedBy = "Michael Becker",
+         ModifiedOn = DateTime.Now,
+         ModifiedBy = "Schulleitung",
+         IsInUntis = true,
+         ApprovedBySubstitue = true,
+         ApprovedByPrincipal = true,
+         Title = "Klasse abwesend ohne Lehrkraft",
+         Description = "",
+         Elements = [new LessonArrangementForAbsentClass(),new OfficialDutyDuringStudentAbsence(),new FinalSigningElement()]
+     }
  ];
         private DocumentBase? SelectedDocument;
         private void SelectRow(TableRowClickEventArgs<DocumentBase> args)
@@ -98,6 +134,12 @@ namespace WebFormular.Components.Pages
             }
         }
 
+        public Boolean FillOutMode { get; set; } = false;
+
+        public void ToggleFillOutMode()
+        {
+            FillOutMode = !FillOutMode;
+        }
         private string RowClassFunc(DocumentBase document, int rowNumber)
         {
             if (SelectedDocument?.Id == document.Id)

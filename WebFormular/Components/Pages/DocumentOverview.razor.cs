@@ -48,6 +48,14 @@ public partial class DocumentOverview
 
     protected override async Task OnInitializedAsync()
     {
-        this.Documents = await DbContext.GetAllAsync();
+        try
+        {
+            this.Documents = await DbContext.GetAllAsync();
+
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("test");
+        }
     }
 }

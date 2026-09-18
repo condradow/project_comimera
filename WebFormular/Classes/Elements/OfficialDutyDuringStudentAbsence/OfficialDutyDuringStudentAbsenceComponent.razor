@@ -1,0 +1,27 @@
+﻿@using MudBlazor
+
+<MudPaper class="pa-4" Outlined>
+    <MudText Typo="Typo.h6">
+        Anderweitige dienstliche Tätigkeit auf Anordnung des SL bei Abwesenheit der
+        SuS (vgl. MArbErl SL Pkt 3.3)
+    </MudText>
+    <MudText>
+        Anm.: Die anderweitige dienstliche Tätigkeit ist mit der Abteilungsleitung zu besprechen.
+        Anm.: Vertretungen haben grundsätzlich Vorrang vor der anderweitigen dienstlichen Tätigkeit.
+    </MudText>
+    <OfficialDutyDuringStudentAbsenceClarificationComponent model="Model.Entry1" />
+    <MudDivider/>
+    <OfficialDutyDuringStudentAbsenceClarificationComponent model="Model.Entry2" />
+    <MudDivider/>
+    <OfficialDutyDuringStudentAbsenceClarificationComponent model="Model.Entry3" />
+    <MudDivider/>
+    <OfficialDutyDuringStudentAbsenceClarificationComponent model="Model.Entry4" />
+    <MudDivider/>
+    <OfficialDutyDuringStudentAbsenceClarificationComponent model="Model.Entry5" />
+</MudPaper>
+
+
+@code {
+    [Parameter, EditorRequired]
+    public OfficialDutyDuringStudentAbsence Model { get; set; } = null!;
+}

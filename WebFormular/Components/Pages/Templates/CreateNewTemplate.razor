@@ -104,9 +104,7 @@
        ELEMENTE
        ========================= *@
 
-    <MudText Typo="Typo.h5" Class="mb-4">
-        Elemente
-    </MudText>
+    
 
     @if (Template.Elements.Count == 0)
     {
@@ -131,24 +129,27 @@
         {
             var index = i;
             var element = Template.Elements[index];
+            
+            <MudPaper Class="pt-3" Elevation="0">
 
-            <MudPaper Class="pa-4 mb-4" Elevation="2">
+              <MudStack AlignItems="AlignItems.Center">
 
-                <div class="d-flex justify-space-between align-center mb-4">
+           
+                <MudStack Row>
+                    <DynamicComponent Type="@GetComponentType(element)"
+                                      Parameters="@GetParameters(element)" />
+                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete"Color="Color.Error"OnClick="@(() => RemoveElement(index))" />
+                        <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowUp" Color="Color.Primary"  />
+                        <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowDown" Color="Color.Primary"  />
 
-                    <MudText Typo="Typo.subtitle1">
-                        Element @(index + 1)
-                    </MudText>
+                    
+                    </MudStack>
 
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                   Color="Color.Error"
-                                   OnClick="@(() => RemoveElement(index))" />
-
-                </div>
-
-                <DynamicComponent Type="@GetComponentType(element)"
-                                  Parameters="@GetParameters(element)" />
-
+                </MudStack>
+                <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" />
+                </MudStack>
+              
             </MudPaper>
         }
     }

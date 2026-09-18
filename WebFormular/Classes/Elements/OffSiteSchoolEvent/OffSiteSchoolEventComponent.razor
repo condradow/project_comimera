@@ -1,0 +1,96 @@
+﻿@using MudBlazor
+
+<MudPaper Class="pa-4" Outlined>
+
+    <MudGrid Spacing="1">
+
+        <!-- Art der Veranstaltung / Fahrt -->
+
+        <MudItem xs="12">
+            <MudText Typo="Typo.caption" Color="Color.Error">Kann man hier nur 1 Auswählen? dann könnte man hierraus ein select machen</MudText>
+
+        </MudItem>
+        <MudItem xs="12">
+            <MudText >Schulveranstaltung an außerschulischem Lernort gem. Schulfahrtenerlass</MudText>
+        </MudItem>
+        <MudItem xs="6" class="pa-0">
+            <MudCheckBox @bind-Checked="Model.EducationalExcursion"
+                         T="Boolean">
+                Unterrichtsgang
+            </MudCheckBox>
+        </MudItem>
+
+        <MudItem xs="6" class="pa-0">
+            <MudCheckBox @bind-Checked="Model.SchoolTrip"
+                         T="Boolean">
+                Schulfahrt
+            </MudCheckBox>
+        </MudItem>
+
+        <MudItem xs="6" class="pa-0">
+            <MudCheckBox @bind-Checked="Model.InternationalEvent"
+                         T="Boolean">
+                Internationale Veranstaltung
+            </MudCheckBox>
+        </MudItem>
+
+        <MudItem xs="6" class="pa-0">
+            <MudCheckBox @bind-Checked="Model.SpecialOccasionTrip"
+                         T="Boolean">
+                Fahrt aus besonderem Anlass
+            </MudCheckBox>
+        </MudItem>
+
+
+        <!-- Ziel -->
+
+        <MudItem xs="12">
+            <MudTextField @bind-Value="Model.Destination"
+                          Label="Ziel"
+                          Variant="Variant.Outlined"
+                          FullWidth />
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudTextField @bind-Value="Model.AdditionalTeachers"
+                          Label="Zusätzlich teilnehmende Lehrkräfte"
+                          Variant="Variant.Outlined"
+                          FullWidth />
+        </MudItem>
+        <!-- Beförderungsmittel -->
+
+       
+
+
+        <!-- Weitere Lehrkräfte -->
+
+        
+
+
+        <MudItem xs="4" md="2">
+            <MudText>Beginn der Abwesenheit:</MudText>
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudDatePicker Label="Datum" @bind-Date="BeginDate" />
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudTimePicker Label="Uhrzeit" @bind-Time="BeginTime" />
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudText>Ende der Abwesenheit:</MudText>
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudDatePicker Label="Datum" @bind-Date="EndDate" />
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudTimePicker Label="Uhrzeit" @bind-Time="EndTime" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField @bind-Value="Model.Transportation"
+                          Label="Beförderungsmittel"
+                          Variant="Variant.Outlined"
+                          FullWidth />
+        </MudItem>
+    </MudGrid>
+
+</MudPaper>

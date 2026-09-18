@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Components
+@using MudBlazor
+
+<MudPaper Class="pa-4" Outlined>
+    <MudText Color="Color.Error" Typo="Typo.caption">könnte man auf Dynamisch erweiterbar machen</MudText>
+    <MudText>
+        Angaben zu einem vom Antragsteller gewünschten Unterrichtstausch bzw. einer
+        Unterrichtsverlegung:
+        <br /> <br />
+        Der angeführte Unterricht wird <u>vor</u>gehalten, ge<u>tauscht</u> oder <u>nach</u>gehalten:
+    </MudText>
+        
+
+
+    <ClarificationComponent clarification="Model.Clarification1" />
+    <MudDivider />
+    <ClarificationComponent clarification="Model.Clarification2" />
+    <MudDivider />
+    <ClarificationComponent clarification="Model.Clarification3" />
+
+   
+
+</MudPaper>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public ApplicantLessonChangeRequest Model { get; set; } = null!;
+
+   
+}

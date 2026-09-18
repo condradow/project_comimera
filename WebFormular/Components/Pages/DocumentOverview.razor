@@ -1,5 +1,6 @@
 ﻿@page "/document-overview"
 @using WebFormular.Classes
+@using WebFormular.Components.UI
 @using WebFormular.Services
 @inject DatabaseContext DbContext
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-8">
@@ -43,9 +44,9 @@
                      Filterable="true"
                      SortMode="SortMode.Multiple"
                      FilterMode="DataGridFilterMode.ColumnFilterMenu"
-                     Dense="false"
+                     Dense="true"
                      Hover="true"
-                     Striped="true"
+                     Striped="false"
                      QuickFilter="@QuickFilter">
 
             <Columns>
@@ -64,58 +65,16 @@
                                 Title="Bearbeitet"
                                 Format="dd.MM.yyyy HH:mm" />
 
-                <TemplateColumn Title="Untis">
+              
+
+                <TemplateColumn Title="Status">
                     <CellTemplate>
-                        <MudIcon Icon="@(context.Item.IsInUntis
-                                                                  ? Icons.Material.Filled.CheckCircle
-                                                              : Icons.Material.Filled.Cancel)"
-                                 Color="@(context.Item.IsInUntis
-                                                                   ? Color.Success
-                                                                   : Color.Default)" />
+                        <StatusComponent Document="@context.Item"/>
+                        
                     </CellTemplate>
                 </TemplateColumn>
 
-                <TemplateColumn Title="Vertretung">
-                    <CellTemplate>
-                        <MudIcon Icon="@(context.Item.ApprovedBySubstitue
-                                                                  ? Icons.Material.Filled.CheckCircle
-                                                              : Icons.Material.Filled.Schedule)"
-                                 Color="@(context.Item.ApprovedBySubstitue
-                                                                   ? Color.Success
-                                                                   : Color.Warning)" />
-                    </CellTemplate>
-                </TemplateColumn>
-
-                <TemplateColumn Title="Schulleitung">
-                    <CellTemplate>
-                        <MudIcon Icon="@(context.Item.ApprovedByPrincipal
-                                                                  ? Icons.Material.Filled.CheckCircle
-                                                              : Icons.Material.Filled.Schedule)"
-                                 Color="@(context.Item.ApprovedByPrincipal
-                                                                   ? Color.Success
-                                                                   : Color.Warning)" />
-                    </CellTemplate>
-                </TemplateColumn>
-
-                <TemplateColumn Title="" Sortable="false" Filterable="false">
-                    <CellTemplate>
-
-                        <MudIconButton Icon="@Icons.Material.Filled.Visibility"
-                                       Color="Color.Primary"
-                                       Size="Size.Small"
-                                       Href="@($"/document/{context.Item.Id}")" />
-
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
-                                       Size="Size.Small"
-                                       Href="@($"/document/{context.Item.Id}/edit")" />
-
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                       Color="Color.Error"
-                                       Size="Size.Small"
-                                       OnClick="@(() => DeleteDocument(context.Item))" />
-
-                    </CellTemplate>
-                </TemplateColumn>
+                
 
             </Columns>
 

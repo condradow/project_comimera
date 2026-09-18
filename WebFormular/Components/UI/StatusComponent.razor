@@ -1,0 +1,48 @@
+﻿@using WebFormular.Classes
+@using WebFormular.Classes.Elements.FinalSigningElement
+@using WebFormular.Enum
+
+<MudTimeline TimelineOrientation="TimelineOrientation.Horizontal"  >
+    <MudTimelineItem Size="Size.Small" Color="SubmittedColor" Variant="Variant.Filled">
+    </MudTimelineItem>
+    <MudTimelineItem Size="Size.Small" Color="SignedByHeadDepartmentColor" Variant="Variant.Filled">
+    </MudTimelineItem>
+    <MudTimelineItem Icon="@Icons.Material.Filled.Check" Size="Size.Small" Color="SignedByPrincipalColor" Variant="Variant.Filled">
+    </MudTimelineItem>
+</MudTimeline>
+@code {
+    [Parameter,EditorRequired]
+    public DocumentBase? Document { get; set; }
+    
+    public DocumentStatus? Status { get; set; }
+    
+    public Color SubmittedColor { get; set; }
+    public Color SignedByHeadDepartmentColor { get; set; }
+    public Color SignedByPrincipalColor { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.Status = Document?.GetDocumentStatus();
+
+        switch (this.Status)
+        {
+            case  DocumentStatus.Submitted:
+                this.SubmittedColor = Color.Success;
+                this.SignedByHeadDepartmentColor = Color.Default;
+                this.SignedByPrincipalColor = Color.Default;
+                break;
+            case  DocumentStatus.SignedByDepartmentHead:
+                this.SubmittedColor = Color.Success;
+                this.SignedByHeadDepartmentColor = Color.Success;
+                this.SignedByPrincipalColor = Color.Default;
+                break;
+            case  DocumentStatus.SignedByPrincipal:
+                this.SubmittedColor = Color.Success;
+                this.SignedByHeadDepartmentColor = Color.Default;
+                this.SignedByPrincipalColor = Color.Default;
+                break;
+        }
+
+    }
+
+}

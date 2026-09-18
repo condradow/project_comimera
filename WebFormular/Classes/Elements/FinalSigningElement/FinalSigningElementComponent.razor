@@ -4,17 +4,21 @@
 
 
 <MudGrid>
-    <MudItem xs="4">
+    <MudItem xs="3">
         <SingatureComponent @bind-Signature="Model.SignatureClassTeacher" />
         <MudText>Klassenlehrer/in</MudText>
     </MudItem>
-    <MudItem xs="4">
+    <MudItem xs="3">
         <SingatureComponent @bind-Signature="Model.SignaturePetitioner" />
         <MudText>Antragsteller/in</MudText>
     </MudItem>
-    <MudItem xs="4">
+    <MudItem xs="3">
         <SingatureComponent @bind-Signature="Model.SignatureDepartmentHead" />
         <MudText>Abteilungsleiter/in</MudText>
+    </MudItem>
+    <MudItem xs="3">
+        <SingatureComponent @bind-Signature="Model.SignaturePrincipal" />
+        <MudText>Schulleiter</MudText>
     </MudItem>
 </MudGrid>
 @code {

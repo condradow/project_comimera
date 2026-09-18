@@ -1,5 +1,7 @@
 ﻿
 using WebFormular.Classes.Elements;
+using WebFormular.Classes.Elements.FinalSigningElement;
+using WebFormular.Enum;
 
 namespace WebFormular.Classes
 {
@@ -17,5 +19,42 @@ namespace WebFormular.Classes
         public string Title { get; set; }
         public string Description { get; set; }
         public List<ElementBase> Elements { get; set; } = [];
+
+        public FinalSigningElement? GetSigningElement()
+        {
+            foreach (ElementBase element in (this.Elements))
+            {
+                if (element is FinalSigningElement signatures)
+                {
+                    return signatures;
+                }
+            }
+
+            return null;
+        }
+
+        public DocumentStatus? GetDocumentStatus()
+        {
+            FinalSigningElement? element = this.GetSigningElement();
+            if (element is null)
+            {
+                return null;
+            }
+            if (element.SignaturePetitioner.Length == 0)
+            {
+                return null;
+            }
+            if(element.SignatureDepartmentHead.Length == 0)
+            {
+                return DocumentStatus.Submitted;
+            }
+            
+            if(element.SignaturePrincipal.Length == 0)
+            {
+                return DocumentStatus.Submitted;
+            }
+            
+            return DocumentStatus.SignedByPrincipal;
+        }
     }
 }

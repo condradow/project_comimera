@@ -1,7 +1,11 @@
 ﻿@page "/create-document"
 @using WebFormular.Classes
 @using WebFormular.Components.Pages.Documents
+@using WebFormular.Components.UI
+@using WebFormular.Services
 @inject NavigationManager NavigationManager
+@inject DatabaseContext DbContext
+
 @if (!FillOutMode)
 {
     
@@ -42,7 +46,12 @@
                     @context.ModifiedOn.ToString("dd.MM.yyyy HH:mm")
                 </MudTd>
 
-      
+                <MudTd>
+                   
+                            <StatusComponent Document="@context"/>
+                        
+                      
+                </MudTd>
 
        
             </RowTemplate>

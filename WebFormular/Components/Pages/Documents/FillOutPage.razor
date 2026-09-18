@@ -1,5 +1,6 @@
 ﻿@using WebFormular.Classes
 @using WebFormular.Classes.Elements
+@using WebFormular.Components.UI
 @if (Document.Elements.Count == 0)
 {
     <MudPaper Class="pa-8 text-center"
@@ -35,7 +36,7 @@ else
               
         </MudPaper>
     }
-    
+    <StatusComponent Document="Document"></StatusComponent>
 }
 
 

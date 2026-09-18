@@ -6,6 +6,7 @@ public partial class DocumentOverview
 {
     private List<DocumentBase> Documents { get; set; } = [];
     private string SearchString { get; set; } = string.Empty;
+    private DocumentBase? SelectedDocument { get; set; }
 
     private Func<DocumentBase, bool> QuickFilter => document =>
     {

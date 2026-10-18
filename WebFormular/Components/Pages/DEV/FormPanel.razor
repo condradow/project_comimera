@@ -1,0 +1,442 @@
+﻿@using System.Text.Json
+@using WebFormular.Data
+@typeparam TForm where TForm : FormEntity, new()
+@typeparam TElement where TElement : ElementEntity, new()
+
+<h4>@Title</h4>
+
+@if (_msg is not null)
+{
+    <div class="alert @(_isError ? "alert-danger" : "alert-success") py-2">@_msg</div>
+}
+
+@* ---------- Suche / Paging ---------- *@
+<div class="row g-2 mb-2 align-items-center">
+    <div class="col-md-4">
+        <input class="form-control form-control-sm" placeholder="Suche in Title / Description" @bind="_search" />
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-sm btn-primary" @onclick="SearchAsync">Suchen (GetAllAsync)</button>
+        <button class="btn btn-sm btn-outline-secondary" @onclick="ResetSearchAsync">Zurücksetzen</button>
+    </div>
+    <div class="col-auto ms-auto">
+        <button class="btn btn-sm btn-outline-secondary" disabled="@(_page == 0)" @onclick="() => ChangePageAsync(-1)">‹</button>
+        <span class="mx-2">Seite @(_page + 1) / @PageCount (@_total Einträge, CountAsync)</span>
+        <button class="btn btn-sm btn-outline-secondary" disabled="@(_page + 1 >= PageCount)" @onclick="() => ChangePageAsync(1)">›</button>
+    </div>
+</div>
+
+@* ---------- Liste ---------- *@
+<div class="table-responsive">
+    <table class="table table-sm table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>InUntis</th>
+                <th>ApprovedBySubstitu</th>
+                <th>ApprovedByPrincipal</th>
+                <th>CreatedOn</th>
+                <th>CreatedBy</th>
+                <th>ModifiedOn</th>
+                <th>ModifiedBy</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in _items)
+            {
+                <tr class="@(_selected?.Id == item.Id ? "table-primary" : "")">
+                    <td title="@item.Id">@(item.Id.ToString()[..8])…</td>
+                    <td>@item.Title</td>
+                    <td>@item.Description</td>
+                    <td>@Fmt(item.InUntis)</td>
+                    <td>@Fmt(item.ApprovedBySubstitu)</td>
+                    <td>@Fmt(item.ApprovedByPrincipal)</td>
+                    <td>@Fmt(item.CreatedOn)</td>
+                    <td>@item.CreatedBy</td>
+                    <td>@Fmt(item.ModifiedOn)</td>
+                    <td>@item.ModifiedBy</td>
+                    <td class="text-nowrap">
+                        <button class="btn btn-sm btn-outline-primary" @onclick="() => SelectAsync(item)">Auswählen</button>
+                        <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteAsync(item)">Löschen</button>
+                    </td>
+                </tr>
+            }
+            @if (_items.Count == 0)
+            {
+                <tr><td colspan="11" class="text-muted">Keine Einträge.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="row g-3 mb-3">
+    @* ---------- Anlegen ---------- *@
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">Neu anlegen (CreateAsync)</div>
+            <div class="card-body">
+                <input class="form-control form-control-sm mb-2" placeholder="Title (max. 200)" maxlength="200" @bind="_newTitle" />
+                <input class="form-control form-control-sm mb-2" placeholder="Description (max. 200)" maxlength="200" @bind="_newDescription" />
+                <button class="btn btn-sm btn-success" @onclick="CreateAsync">Anlegen</button>
+            </div>
+        </div>
+    </div>
+
+    @* ---------- Abfragen nach Id ---------- *@
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">Abfragen nach Id</div>
+            <div class="card-body">
+                <input class="form-control form-control-sm mb-2" placeholder="Guid" @bind="_lookupId" />
+                <button class="btn btn-sm btn-outline-primary" @onclick="GetByIdAsync">GetByIdAsync</button>
+                <button class="btn btn-sm btn-outline-primary" @onclick="ExistsAsync">ExistsAsync</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ---------- Ausgewählter Eintrag ---------- *@
+@if (_selected is not null)
+{
+    <div class="card mb-3 border-primary">
+        <div class="card-header">Ausgewählt: <code>@_selected.Id</code></div>
+        <div class="card-body">
+            <div class="row g-2 mb-3">
+                <div class="col-md-5">
+                    <input class="form-control form-control-sm" maxlength="200" @bind="_editTitle" />
+                </div>
+                <div class="col-md-5">
+                    <input class="form-control form-control-sm" maxlength="200" @bind="_editDescription" />
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-sm btn-warning" @onclick="UpdateAsync">UpdateAsync</button>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" checked="@(_selected.InUntis == true)"
+                           @onchange="e => SetFlagAsync(nameof(FormEntity.InUntis), (bool)e.Value!)" />
+                    InUntis (SetInUntisAsync)
+                </label>
+                <label class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" checked="@(_selected.ApprovedBySubstitu == true)"
+                           @onchange="e => SetFlagAsync(nameof(FormEntity.ApprovedBySubstitu), (bool)e.Value!)" />
+                    ApprovedBySubstitu
+                </label>
+                <label class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" checked="@(_selected.ApprovedByPrincipal == true)"
+                           @onchange="e => SetFlagAsync(nameof(FormEntity.ApprovedByPrincipal), (bool)e.Value!)" />
+                    ApprovedByPrincipal
+                </label>
+            </div>
+
+            <hr />
+            <h6>Elemente (@_elements.Count)</h6>
+
+            <div class="mb-2">
+                <button class="btn btn-sm btn-outline-primary" @onclick="CountElementsAsync">CountByParentAsync</button>
+                <button class="btn btn-sm btn-outline-primary" @onclick="ReadTypedAsync">GetElementsAsync (typisiert)</button>
+                @if (CountWithElements is not null)
+                {
+                    <button class="btn btn-sm btn-outline-primary" @onclick="CountWithElementsAsync">GetWithElementsAsync</button>
+                }
+                <button class="btn btn-sm btn-outline-success" @onclick="CreateManyElementsAsync">3 Beispielelemente (CreateManyAsync)</button>
+                <button class="btn btn-sm btn-outline-danger" @onclick="DeleteAllElementsAsync">Alle löschen (DeleteByParentAsync)</button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-sm table-striped align-middle">
+                    <thead>
+                        <tr><th>Id</th><th>JSONData</th><th>CreatedOn</th><th>CreatedBy</th><th>ModifiedOn</th><th>ModifiedBy</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var element in _elements)
+                        {
+                            <tr class="@(_editElementId == element.Id ? "table-warning" : "")">
+                                <td title="@element.Id">@(element.Id.ToString()[..8])…</td>
+                                <td><code title="@element.JsonData">@Shorten(element.JsonData)</code></td>
+                                <td>@Fmt(element.CreatedOn)</td>
+                                <td>@element.CreatedBy</td>
+                                <td>@Fmt(element.ModifiedOn)</td>
+                                <td>@element.ModifiedBy</td>
+                                <td class="text-nowrap">
+                                    <button class="btn btn-sm btn-outline-primary" @onclick="() => StartEditElement(element)">Bearbeiten</button>
+                                    <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteElementAsync(element)">Löschen</button>
+                                </td>
+                            </tr>
+                        }
+                        @if (_elements.Count == 0)
+                        {
+                            <tr><td colspan="7" class="text-muted">Keine Elemente.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-lg-6">
+                    <label class="form-label">Neues Element (JSONData, CreateAsync)</label>
+                    <textarea class="form-control form-control-sm mb-2" rows="3" @bind="_newJson"></textarea>
+                    <button class="btn btn-sm btn-success" @onclick="CreateElementAsync">Element anlegen</button>
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">
+                        Element bearbeiten (UpdateAsync)
+                        @if (_editElementId is not null)
+                        {
+                            <code>@_editElementId</code>
+                        }
+                    </label>
+                    <textarea class="form-control form-control-sm mb-2" rows="3" disabled="@(_editElementId is null)" @bind="_editElementJson"></textarea>
+                    <button class="btn btn-sm btn-warning" disabled="@(_editElementId is null)" @onclick="UpdateElementAsync">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private const int PageSize = 10;
+
+    [Parameter, EditorRequired] public string Title { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public FormRepositoryBase<TForm> Repo { get; set; } = default!;
+    [Parameter, EditorRequired] public ElementRepositoryBase<TElement> ElementRepo { get; set; } = default!;
+    [Parameter] public string CurrentUser { get; set; } = "TestUser";
+
+    /// <summary>Optional: liefert die Elementanzahl über GetWithElementsAsync (z. B. DocumentRepository).</summary>
+    [Parameter] public Func<Guid, Task<int>>? CountWithElements { get; set; }
+
+    private List<TForm> _items = new();
+    private List<TElement> _elements = new();
+    private TForm? _selected;
+    private int _total;
+    private int _page;
+    private string? _search;
+
+    private string? _msg;
+    private bool _isError;
+
+    private string _newTitle = string.Empty;
+    private string _newDescription = string.Empty;
+    private string _editTitle = string.Empty;
+    private string _editDescription = string.Empty;
+    private string _lookupId = string.Empty;
+
+    private string _newJson = "{\"ElementType\":\"ApplicantLessonChangeRequest\",\"Title\":\"Beispiel\"}";
+    private Guid? _editElementId;
+    private string _editElementJson = string.Empty;
+
+    private int PageCount => Math.Max(1, (int)Math.Ceiling(_total / (double)PageSize));
+
+    protected override Task OnInitializedAsync() => Run(() => Task.FromResult<string?>(null));
+
+    // ---------- Infrastruktur ----------
+    private async Task Run(Func<Task<string?>> action)
+    {
+        try
+        {
+            _msg = await action();
+            _isError = false;
+            await LoadAsync();
+        }
+        catch (Exception ex)
+        {
+            _msg = ex.Message;
+            _isError = true;
+        }
+    }
+
+    private async Task LoadAsync()
+    {
+        _total = await Repo.CountAsync(_search);
+        _page = Math.Min(_page, PageCount - 1);
+        _items = await Repo.GetAllAsync(_search, _page * PageSize, PageSize);
+
+        if (_selected is not null)
+        {
+            _selected = await Repo.GetByIdAsync(_selected.Id);
+            _elements = _selected is null
+                ? new List<TElement>()
+                : await ElementRepo.GetByParentAsync(_selected.Id);
+        }
+        else
+        {
+            _elements = new List<TElement>();
+        }
+    }
+
+    // ---------- Liste ----------
+    private Task SearchAsync() => Run(() => { _page = 0; return Task.FromResult<string?>(null); });
+
+    private Task ResetSearchAsync() => Run(() =>
+    {
+        _search = null;
+        _page = 0;
+        return Task.FromResult<string?>(null);
+    });
+
+    private Task ChangePageAsync(int delta) => Run(() =>
+    {
+        _page = Math.Max(0, _page + delta);
+        return Task.FromResult<string?>(null);
+    });
+
+    private Task SelectAsync(TForm item) => Run(() =>
+    {
+        _selected = item;
+        _editTitle = item.Title ?? string.Empty;
+        _editDescription = item.Description ?? string.Empty;
+        _editElementId = null;
+        return Task.FromResult<string?>(null);
+    });
+
+    // ---------- Kopfdaten ----------
+    private Task CreateAsync() => Run(async () =>
+    {
+        var entity = new TForm { Title = _newTitle, Description = _newDescription };
+        var id = await Repo.CreateAsync(entity, CurrentUser);
+        _newTitle = _newDescription = string.Empty;
+        return $"Angelegt: {id}";
+    });
+
+    private Task UpdateAsync() => Run(async () =>
+    {
+        _selected!.Title = _editTitle;
+        _selected.Description = _editDescription;
+        var ok = await Repo.UpdateAsync(_selected, CurrentUser);
+        return ok ? "Aktualisiert." : "Nicht gefunden.";
+    });
+
+    private Task SetFlagAsync(string flag, bool value) => Run(async () =>
+    {
+        var id = _selected!.Id;
+        var ok = flag switch
+        {
+            nameof(FormEntity.InUntis) => await Repo.SetInUntisAsync(id, value, CurrentUser),
+            nameof(FormEntity.ApprovedBySubstitu) => await Repo.SetApprovedBySubstituAsync(id, value, CurrentUser),
+            _ => await Repo.SetApprovedByPrincipalAsync(id, value, CurrentUser)
+        };
+        return ok ? $"{flag} = {value}" : "Nicht gefunden.";
+    });
+
+    private Task DeleteAsync(TForm item) => Run(async () =>
+    {
+        var ok = await Repo.DeleteAsync(item.Id);
+        if (_selected?.Id == item.Id)
+        {
+            _selected = null;
+            _editElementId = null;
+        }
+        return ok ? $"Gelöscht (inkl. Elemente): {item.Id}" : "Nicht gefunden.";
+    });
+
+    private Task GetByIdAsync() => Run(async () =>
+    {
+        if (!Guid.TryParse(_lookupId, out var id))
+            throw new InvalidOperationException("Ungültige Guid.");
+        var entity = await Repo.GetByIdAsync(id);
+        return entity is null ? "Nicht gefunden." : $"Gefunden: {entity.Title} | {entity.Description}";
+    });
+
+    private Task ExistsAsync() => Run(async () =>
+    {
+        if (!Guid.TryParse(_lookupId, out var id))
+            throw new InvalidOperationException("Ungültige Guid.");
+        return await Repo.ExistsAsync(id) ? "Existiert." : "Existiert nicht.";
+    });
+
+    // ---------- Elemente ----------
+    private Task CreateElementAsync() => Run(async () =>
+    {
+        EnsureJson(_newJson);
+        var element = new TElement { JsonData = NullIfEmpty(_newJson) };
+        var id = await ElementRepo.CreateAsync(_selected!.Id, element, CurrentUser);
+        return $"Element angelegt: {id}";
+    });
+
+    private Task CreateManyElementsAsync() => Run(async () =>
+    {
+        var elements = Enumerable.Range(1, 3)
+            .Select(i => new TElement { JsonData = $"{{\"ElementType\":\"ApplicantLessonChangeRequest\",\"Title\":\"Beispiel {i}\"}}" })
+            .ToList();
+        await ElementRepo.CreateManyAsync(_selected!.Id, elements, CurrentUser);
+        return $"{elements.Count} Elemente in einer Transaktion angelegt.";
+    });
+
+    private void StartEditElement(TElement element)
+    {
+        _editElementId = element.Id;
+        _editElementJson = element.JsonData ?? string.Empty;
+    }
+
+    private Task UpdateElementAsync() => Run(async () =>
+    {
+        EnsureJson(_editElementJson);
+        var element = _elements.First(e => e.Id == _editElementId);
+        element.JsonData = NullIfEmpty(_editElementJson);
+        var ok = await ElementRepo.UpdateAsync(element, CurrentUser);
+        _editElementId = null;
+        return ok ? "Element aktualisiert." : "Element nicht gefunden.";
+    });
+
+    private Task DeleteElementAsync(TElement element) => Run(async () =>
+    {
+        var ok = await ElementRepo.DeleteAsync(element.Id);
+        if (_editElementId == element.Id)
+            _editElementId = null;
+        return ok ? "Element gelöscht." : "Element nicht gefunden.";
+    });
+
+    private Task DeleteAllElementsAsync() => Run(async () =>
+    {
+        var count = await ElementRepo.DeleteByParentAsync(_selected!.Id);
+        _editElementId = null;
+        return $"{count} Elemente gelöscht.";
+    });
+
+    private Task CountElementsAsync() => Run(async () =>
+        $"CountByParentAsync: {await ElementRepo.CountByParentAsync(_selected!.Id)}");
+
+    private Task ReadTypedAsync() => Run(async () =>
+    {
+        var typed = await ElementRepo.GetElementsAsync(_selected!.Id);
+        return $"{typed.Count} typisierte Elemente: " +
+               string.Join(", ", typed.Select(t => t.Element.GetType().Name));
+    });
+
+    private Task CountWithElementsAsync() => Run(async () =>
+    {
+        var count = await CountWithElements!(_selected!.Id);
+        return count < 0 ? "Nicht gefunden." : $"GetWithElementsAsync: {count} Elemente geladen.";
+    });
+
+    // ---------- Hilfsmethoden ----------
+    private static void EnsureJson(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return;
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidOperationException("Ungültiges JSON: " + ex.Message);
+        }
+    }
+
+    private static string? NullIfEmpty(string? s) => string.IsNullOrWhiteSpace(s) ? null : s;
+
+    private static string Shorten(string? s, int max = 80) =>
+        s is null ? "NULL" : s.Length <= max ? s : s[..max] + "…";
+
+    private static string Fmt(bool? value) => value is null ? "NULL" : value.Value ? "ja" : "nein";
+
+    // Werte sind UTC gespeichert; ToLocalTime behandelt "Unspecified" als UTC
+    private static string Fmt(DateTime? value) =>
+        value is null ? "NULL" : value.Value.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss");
+}

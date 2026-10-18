@@ -1,0 +1,501 @@
+﻿@page "/testpage"
+@* Blazor Web App (.NET 8+): Interaktivität pro Seite. Bei älterem Blazor Server die nächste Zeile entfernen. *@
+@rendermode InteractiveServer
+@using WebFormular.Data
+@inject UserRepository Users
+@inject DocumentRepository Docs
+@inject TemplateRepository Templates
+
+<PageTitle>Datenbank-Testseite</PageTitle>
+
+<h3>Datenbank-Testseite</h3>
+<p class="text-muted">Nur zum Testen. Vor dem Produktivbetrieb entfernen oder mit <code>[Authorize(Roles = "Admin")]</code> schützen.</p>
+
+<div class="row g-2 align-items-center mb-3">
+    <div class="col-auto"><label class="col-form-label">Aktueller Benutzer (CreatedBy / ModifiedBy):</label></div>
+    <div class="col-auto"><input class="form-control form-control-sm" @bind="_currentUser" /></div>
+</div>
+
+<ul class="nav nav-tabs mb-3">
+    @foreach (var (key, label) in _tabs)
+    {
+        <li class="nav-item">
+            <button class="nav-link @(_tab == key ? "active" : "")" @onclick="() => SetTabAsync(key)">@label</button>
+        </li>
+    }
+</ul>
+
+@if (_msg is not null)
+{
+    <div class="alert @(_isError ? "alert-danger" : "alert-success") py-2">@_msg</div>
+}
+
+@* ======================= USERS ======================= *@
+@if (_tab == "users")
+{
+    <div class="row g-3 mb-3">
+        <div class="col-lg-8">
+            <h5>Users (@_users.Count, GetAllAsync)</h5>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped align-middle">
+                    <thead>
+                        <tr><th>Id</th><th>Username</th><th>Email</th><th>IsActive</th><th>CreatedAt</th><th>LastLoginAt</th><th>Rollen</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var u in _users)
+                        {
+                            <tr class="@(_selectedUser?.Id == u.Id ? "table-primary" : "")">
+                                <td title="@u.Id">@(u.Id.ToString()[..8])…</td>
+                                <td>@u.Username</td>
+                                <td>@u.Email</td>
+                                <td>@(u.IsActive ? "ja" : "nein")</td>
+                                <td>@Fmt(u.CreatedAt)</td>
+                                <td>@Fmt(u.LastLoginAt)</td>
+                                <td>@string.Join(", ", u.Roles)</td>
+                                <td class="text-nowrap">
+                                    <button class="btn btn-sm btn-outline-primary" @onclick="() => SelectUser(u)">Auswählen</button>
+                                </td>
+                            </tr>
+                        }
+                        @if (_users.Count == 0)
+                        {
+                            <tr><td colspan="8" class="text-muted">Keine Benutzer.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-3">
+                <div class="card-header">Benutzer anlegen (CreateUserAsync)</div>
+                <div class="card-body">
+                    <input class="form-control form-control-sm mb-2" placeholder="Username" maxlength="50" @bind="_newUsername" />
+                    <input class="form-control form-control-sm mb-2" type="password" placeholder="Passwort" @bind="_newPassword" />
+                    <input class="form-control form-control-sm mb-2" placeholder="Email (optional)" maxlength="256" @bind="_newEmail" />
+                    <div class="mb-2">
+                        @foreach (var r in _roles)
+                        {
+                            var roleName = r.Name;
+                            <label class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" checked="@_newRoles.Contains(roleName)"
+                                       @onchange="e => Toggle(_newRoles, roleName, (bool)e.Value!)" />
+                                @roleName
+                            </label>
+                        }
+                    </div>
+                    <button class="btn btn-sm btn-success" @onclick="CreateUserAsync">Anlegen</button>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">Login testen (ValidateCredentialsAsync)</div>
+                <div class="card-body">
+                    <input class="form-control form-control-sm mb-2" placeholder="Username" @bind="_loginUser" />
+                    <input class="form-control form-control-sm mb-2" type="password" placeholder="Passwort" @bind="_loginPass" />
+                    <button class="btn btn-sm btn-primary" @onclick="LoginAsync">Login prüfen</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Abfragen</div>
+                <div class="card-body">
+                    <input class="form-control form-control-sm mb-2" placeholder="Username" @bind="_lookupName" />
+                    <button class="btn btn-sm btn-outline-primary" @onclick="UsernameExistsAsync">UsernameExistsAsync</button>
+                    <button class="btn btn-sm btn-outline-primary" @onclick="GetByUsernameAsync">GetByUsernameAsync</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (_selectedUser is { } su)
+    {
+        <div class="card mb-3 border-primary">
+            <div class="card-header">Ausgewählt: <strong>@su.Username</strong> <code>@su.Id</code></div>
+            <div class="card-body">
+                <div class="row g-2 mb-3">
+                    <div class="col-md-3"><input class="form-control form-control-sm" placeholder="Username" maxlength="50" @bind="_editUsername" /></div>
+                    <div class="col-md-4"><input class="form-control form-control-sm" placeholder="Email" maxlength="256" @bind="_editEmail" /></div>
+                    <div class="col-md-5 text-nowrap">
+                        <button class="btn btn-sm btn-warning" @onclick="UpdateUserAsync">UpdateAsync</button>
+                        <button class="btn btn-sm btn-outline-secondary" @onclick="() => SetActiveAsync(!su.IsActive)">
+                            SetActiveAsync (@(su.IsActive ? "deaktivieren" : "aktivieren"))
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" @onclick="DeleteUserAsync">DeleteUserAsync</button>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-4">
+                        <label class="form-label">Passwort zurücksetzen (ResetPasswordAsync)</label>
+                        <input class="form-control form-control-sm mb-2" type="password" placeholder="Neues Passwort" @bind="_resetPassword" />
+                        <button class="btn btn-sm btn-warning" @onclick="ResetPasswordAsync">Zurücksetzen</button>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Passwort ändern (ChangePasswordAsync)</label>
+                        <input class="form-control form-control-sm mb-2" type="password" placeholder="Aktuelles Passwort" @bind="_currentPw" />
+                        <input class="form-control form-control-sm mb-2" type="password" placeholder="Neues Passwort" @bind="_newPw" />
+                        <button class="btn btn-sm btn-warning" @onclick="ChangePasswordAsync">Ändern</button>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Einzelne Rolle</label>
+                        <select class="form-select form-select-sm mb-2" @bind="_roleSel">
+                            @foreach (var r in _roles)
+                            {
+                                <option value="@r.Name">@r.Name</option>
+                            }
+                        </select>
+                        <button class="btn btn-sm btn-outline-success" @onclick="AddToRoleAsync">AddUserToRoleAsync</button>
+                        <button class="btn btn-sm btn-outline-danger" @onclick="RemoveFromRoleAsync">RemoveUserFromRoleAsync</button>
+                        <button class="btn btn-sm btn-outline-primary" @onclick="IsInRoleAsync">IsInRoleAsync</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="form-label">Alle Rollen ersetzen (SetRolesAsync)</label>
+                    <div class="mb-2">
+                        @foreach (var r in _roles)
+                        {
+                            var roleName = r.Name;
+                            <label class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" checked="@_setRoles.Contains(roleName)"
+                                       @onchange="e => Toggle(_setRoles, roleName, (bool)e.Value!)" />
+                                @roleName
+                            </label>
+                        }
+                    </div>
+                    <button class="btn btn-sm btn-warning" @onclick="SetRolesAsync">Rollen ersetzen</button>
+                    <button class="btn btn-sm btn-outline-primary" @onclick="GetRolesForUserAsync">GetRolesForUserAsync</button>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@* ======================= ROLES ======================= *@
+@if (_tab == "roles")
+{
+    <div class="row g-3">
+        <div class="col-lg-8">
+            <h5>Roles (@_roles.Count, GetRolesAsync)</h5>
+            <table class="table table-sm table-striped align-middle">
+                <thead><tr><th>Id</th><th>Name</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var r in _roles)
+                    {
+                        var roleName = r.Name;
+                        <tr>
+                            <td>@r.Id</td>
+                            <td>@roleName</td>
+                            <td class="text-nowrap">
+                                <button class="btn btn-sm btn-outline-primary" @onclick="() => ShowUsersInRoleAsync(roleName)">Benutzer (GetUsersInRoleAsync)</button>
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteRoleAsync(roleName)">DeleteRoleAsync</button>
+                            </td>
+                        </tr>
+                    }
+                    @if (_roles.Count == 0)
+                    {
+                        <tr><td colspan="3" class="text-muted">Keine Rollen.</td></tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (_usersInRoleName is not null)
+            {
+                <h6>Benutzer in Rolle „@_usersInRoleName“ (@_usersInRole.Count)</h6>
+                <ul>
+                    @foreach (var u in _usersInRole)
+                    {
+                        <li>@u.Username (@u.Email)</li>
+                    }
+                </ul>
+            }
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">Rolle anlegen (CreateRoleAsync)</div>
+                <div class="card-body">
+                    <input class="form-control form-control-sm mb-2" placeholder="Name" maxlength="50" @bind="_newRoleName" />
+                    <button class="btn btn-sm btn-success" @onclick="CreateRoleAsync">Anlegen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@* ======================= DOCUMENTS ======================= *@
+@if (_tab == "documents")
+{
+    <div class="card mb-3">
+        <div class="card-header">Dokument aus Template erzeugen (CreateFromTemplateAsync)</div>
+        <div class="card-body row g-2">
+            <div class="col-md-6">
+                <select class="form-select form-select-sm" @bind="_tplSel">
+                    <option value="">– Template wählen –</option>
+                    @foreach (var t in _templates)
+                    {
+                        <option value="@t.Id">@t.Title (@(t.Id.ToString()[..8]))</option>
+                    }
+                </select>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-sm btn-success" @onclick="CreateFromTemplateAsync">Erzeugen</button>
+            </div>
+        </div>
+    </div>
+
+    <FormPanel @key="_docKey" TForm="Document" TElement="Element"
+               Title="Documents / Elements"
+               Repo="Docs" ElementRepo="Docs.Elements"
+               CurrentUser="@_currentUser"
+               CountWithElements="DocCountWithElements" />
+}
+
+@* ======================= TEMPLATES ======================= *@
+@if (_tab == "templates")
+{
+    <FormPanel TForm="Template" TElement="TemplateElement"
+               Title="Templates / TemplateElements"
+               Repo="Templates" ElementRepo="Templates.Elements"
+               CurrentUser="@_currentUser"
+               CountWithElements="TemplateCountWithElements" />
+}
+
+@code {
+    private static readonly (string Key, string Label)[] _tabs =
+    {
+        ("users", "Users"),
+        ("roles", "Roles"),
+        ("documents", "Documents / Elements"),
+        ("templates", "Templates / TemplateElements")
+    };
+
+    private string _tab = "users";
+    private string _currentUser = "TestUser";
+    private string? _msg;
+    private bool _isError;
+
+    // Users / Roles
+    private List<User> _users = new();
+    private List<Role> _roles = new();
+    private User? _selectedUser;
+
+    private string _newUsername = string.Empty;
+    private string _newPassword = string.Empty;
+    private string _newEmail = string.Empty;
+    private readonly HashSet<string> _newRoles = new() { "User" };
+
+    private string _loginUser = string.Empty;
+    private string _loginPass = string.Empty;
+    private string _lookupName = string.Empty;
+
+    private string _editUsername = string.Empty;
+    private string _editEmail = string.Empty;
+    private string _resetPassword = string.Empty;
+    private string _currentPw = string.Empty;
+    private string _newPw = string.Empty;
+    private string _roleSel = string.Empty;
+    private HashSet<string> _setRoles = new();
+
+    private string _newRoleName = string.Empty;
+    private string? _usersInRoleName;
+    private List<User> _usersInRole = new();
+
+    // Documents
+    private List<Template> _templates = new();
+    private string _tplSel = string.Empty;
+    private int _docKey;
+
+    protected override Task OnInitializedAsync() => Run(() => Task.FromResult<string?>(null));
+
+    // ---------- Infrastruktur ----------
+    private async Task Run(Func<Task<string?>> action)
+    {
+        try
+        {
+            _msg = await action();
+            _isError = false;
+            await ReloadAsync();
+        }
+        catch (Exception ex)
+        {
+            _msg = ex.Message;
+            _isError = true;
+        }
+    }
+
+    private async Task ReloadAsync()
+    {
+        _roles = await Users.GetRolesAsync();
+        _users = await Users.GetAllAsync(0, 1000);
+
+        if (_roles.All(r => r.Name != _roleSel))
+            _roleSel = _roles.FirstOrDefault()?.Name ?? string.Empty;
+
+        if (_selectedUser is not null)
+        {
+            _selectedUser = await Users.GetByIdAsync(_selectedUser.Id);
+            _setRoles = _selectedUser?.Roles.ToHashSet() ?? new HashSet<string>();
+        }
+
+        if (_tab == "documents")
+            _templates = await Templates.GetAllAsync(null, 0, 1000);
+
+        if (_usersInRoleName is not null)
+            _usersInRole = await Users.GetUsersInRoleAsync(_usersInRoleName);
+    }
+
+    private Task SetTabAsync(string key) => Run(() =>
+    {
+        _tab = key;
+        _msg = null;
+        return Task.FromResult<string?>(null);
+    });
+
+    private static void Toggle(HashSet<string> set, string name, bool on)
+    {
+        if (on) set.Add(name); else set.Remove(name);
+    }
+
+    // ---------- Users ----------
+    private Task CreateUserAsync() => Run(async () =>
+    {
+        var email = string.IsNullOrWhiteSpace(_newEmail) ? null : _newEmail;
+        var id = await Users.CreateUserAsync(_newUsername, _newPassword, email, _newRoles.ToList());
+        _newUsername = _newPassword = _newEmail = string.Empty;
+        return $"Benutzer angelegt: {id}";
+    });
+
+    private Task LoginAsync() => Run(async () =>
+    {
+        var user = await Users.ValidateCredentialsAsync(_loginUser, _loginPass);
+        _loginPass = string.Empty;
+        return user is null
+            ? "Login fehlgeschlagen (unbekannter Benutzer, falsches Passwort oder inaktiv)."
+            : $"Login OK: {user.Username}, Rollen: {string.Join(", ", user.Roles)}";
+    });
+
+    private Task UsernameExistsAsync() => Run(async () =>
+        await Users.UsernameExistsAsync(_lookupName) ? "Username existiert." : "Username existiert nicht.");
+
+    private Task GetByUsernameAsync() => Run(async () =>
+    {
+        var user = await Users.GetByUsernameAsync(_lookupName);
+        return user is null
+            ? "Nicht gefunden."
+            : $"{user.Id} | {user.Username} | {user.Email} | Rollen: {string.Join(", ", user.Roles)}";
+    });
+
+    private void SelectUser(User user)
+    {
+        _selectedUser = user;
+        _editUsername = user.Username;
+        _editEmail = user.Email ?? string.Empty;
+        _setRoles = user.Roles.ToHashSet();
+        _resetPassword = _currentPw = _newPw = string.Empty;
+        _msg = null;
+    }
+
+    private Task UpdateUserAsync() => Run(async () =>
+    {
+        _selectedUser!.Username = _editUsername;
+        _selectedUser.Email = string.IsNullOrWhiteSpace(_editEmail) ? null : _editEmail;
+        return await Users.UpdateAsync(_selectedUser) ? "Benutzer aktualisiert." : "Nicht gefunden.";
+    });
+
+    private Task SetActiveAsync(bool active) => Run(async () =>
+        await Users.SetActiveAsync(_selectedUser!.Id, active)
+            ? $"IsActive = {active}"
+            : "Nicht gefunden.");
+
+    private Task DeleteUserAsync() => Run(async () =>
+    {
+        var id = _selectedUser!.Id;
+        _selectedUser = null;
+        return await Users.DeleteUserAsync(id) ? "Benutzer gelöscht." : "Nicht gefunden.";
+    });
+
+    private Task ResetPasswordAsync() => Run(async () =>
+    {
+        var ok = await Users.ResetPasswordAsync(_selectedUser!.Id, _resetPassword);
+        _resetPassword = string.Empty;
+        return ok ? "Passwort zurückgesetzt." : "Nicht gefunden.";
+    });
+
+    private Task ChangePasswordAsync() => Run(async () =>
+    {
+        var ok = await Users.ChangePasswordAsync(_selectedUser!.Id, _currentPw, _newPw);
+        _currentPw = _newPw = string.Empty;
+        return ok ? "Passwort geändert." : "Aktuelles Passwort falsch oder Benutzer nicht gefunden.";
+    });
+
+    private Task AddToRoleAsync() => Run(async () =>
+        await Users.AddUserToRoleAsync(_selectedUser!.Id, _roleSel)
+            ? $"Rolle „{_roleSel}“ hinzugefügt."
+            : $"Benutzer hat die Rolle „{_roleSel}“ bereits.");
+
+    private Task RemoveFromRoleAsync() => Run(async () =>
+        await Users.RemoveUserFromRoleAsync(_selectedUser!.Id, _roleSel)
+            ? $"Rolle „{_roleSel}“ entfernt."
+            : $"Benutzer hatte die Rolle „{_roleSel}“ nicht.");
+
+    private Task IsInRoleAsync() => Run(async () =>
+        await Users.IsInRoleAsync(_selectedUser!.Id, _roleSel)
+            ? $"{_selectedUser.Username} ist in der Rolle „{_roleSel}“."
+            : $"{_selectedUser.Username} ist NICHT in der Rolle „{_roleSel}“.");
+
+    private Task SetRolesAsync() => Run(async () =>
+    {
+        await Users.SetRolesAsync(_selectedUser!.Id, _setRoles.ToList());
+        return $"Rollen ersetzt durch: {(_setRoles.Count == 0 ? "(keine)" : string.Join(", ", _setRoles))}";
+    });
+
+    private Task GetRolesForUserAsync() => Run(async () =>
+    {
+        var roles = await Users.GetRolesForUserAsync(_selectedUser!.Id);
+        return $"Rollen: {(roles.Count == 0 ? "(keine)" : string.Join(", ", roles))}";
+    });
+
+    // ---------- Roles ----------
+    private Task CreateRoleAsync() => Run(async () =>
+    {
+        var id = await Users.CreateRoleAsync(_newRoleName);
+        _newRoleName = string.Empty;
+        return $"Rolle angelegt (Id {id}).";
+    });
+
+    private Task DeleteRoleAsync(string name) => Run(async () =>
+    {
+        if (_usersInRoleName == name)
+            _usersInRoleName = null;
+        return await Users.DeleteRoleAsync(name) ? $"Rolle „{name}“ gelöscht." : "Nicht gefunden.";
+    });
+
+    private Task ShowUsersInRoleAsync(string name) => Run(() =>
+    {
+        _usersInRoleName = name;
+        return Task.FromResult<string?>(null);
+    });
+
+    // ---------- Documents / Templates ----------
+    private Task CreateFromTemplateAsync() => Run(async () =>
+    {
+        if (!Guid.TryParse(_tplSel, out var templateId))
+            throw new InvalidOperationException("Bitte ein Template wählen.");
+
+        var id = await Docs.CreateFromTemplateAsync(templateId, _currentUser);
+        _docKey++; // erzwingt das Neuladen der Dokumentliste
+        return id is null ? "Template nicht gefunden." : $"Dokument aus Template erzeugt: {id}";
+    });
+
+    private async Task<int> DocCountWithElements(Guid id) =>
+        (await Docs.GetWithElementsAsync(id))?.Elements.Count ?? -1;
+
+    private async Task<int> TemplateCountWithElements(Guid id) =>
+        (await Templates.GetWithElementsAsync(id))?.Elements.Count ?? -1;
+
+    // ---------- Helfer ----------
+    // Werte sind UTC gespeichert; ToLocalTime behandelt "Unspecified" als UTC
+    private static string Fmt(DateTime? value) =>
+        value is null ? "–" : value.Value.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss");
+}

@@ -1,5 +1,6 @@
 using MudBlazor.Services;
 using WebFormular.Components;
+using WebFormular.Data;
 using WebFormular.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,14 @@ builder.Services.AddMudServices();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+//var cs = builder.Configuration.GetConnectionString("WebFormular")!;
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection String 'DefaultConnection' fehlt in appsettings.json.");
+
+builder.Services.AddScoped(_ => new UserRepository(connectionString));
+builder.Services.AddScoped(_ => new DocumentRepository(connectionString));
+builder.Services.AddScoped(_ => new TemplateRepository(connectionString));
+
 builder.Services.AddScoped<DatabaseContext>(sp =>
 {
     var connectionString =

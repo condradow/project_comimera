@@ -1,8 +1,10 @@
 ﻿
 <MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-    <MudNavLink Href="create-document" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Neuer Antrag</MudNavLink>
     <MudNavLink Href="document-overview" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.EditNote">Meine Anträge</MudNavLink>
+        <MudBadge Content="3" Overlap="true" >
+    <MudNavLink Href="document-overview" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.EditNote">Zu Prüfen/noch Offen</MudNavLink>
+    </MudBadge>
 
     <MudNavGroup Title="Administrativ">
         <MudNavLink Href="document-overview" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">document-overview</MudNavLink>
@@ -10,7 +12,7 @@
     </MudNavGroup>
     <MudNavGroup Title="Vorlagen">
         <MudNavLink Href="create-new-template" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Neue Vorlage anlegen</MudNavLink>
-
+        <MudNavLink Href="template-overview" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Vorlagen Übersicht</MudNavLink>
     </MudNavGroup>
 
     <MudNavGroup Title="General">

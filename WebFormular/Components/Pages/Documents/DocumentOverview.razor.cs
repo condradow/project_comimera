@@ -1,6 +1,6 @@
 ﻿using WebFormular.Classes;
 
-namespace WebFormular.Components.Pages;
+namespace WebFormular.Components.Pages.Documents;
 
 public partial class DocumentOverview
 {

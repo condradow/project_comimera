@@ -1,36 +1,45 @@
 ﻿@page "/"
-
 <MudGrid class=" pa-4">
-    <MudItem xs="6">
-        <MudPaper Height="30vh" Style="display: flex; align-items: center; justify-content: center;" Outlined Elevation="0">
-            <MudText Align="Align.Center" >
-                   Meine Anträge
-            </MudText>
+    <MudItem xs="6" class="fade-in duration-1">
+        <MudPaper Height="30vh" Outlined="true" Elevation="0" Style="display: flex;">
+            <MudButton Href="document-overview-personal" FullWidth="true" Style="height: 100%;" Color="Color.Transparent" Variant="Variant.Text" DropShadow="false">
+                <MudStack AlignItems="AlignItems.Start" Spacing="0">
+                    <MudText>Meine Anträge</MudText>
+                    <MudDivider class="pt-2"></MudDivider>
+                    <MudBadge Content="10" Color="Color.Success" Origin="Origin.CenterRight">
+                        <MudText class="pr-4" Typo="Typo.caption">Genehmingt</MudText>
+                    </MudBadge>
+                    <MudBadge Content="3" Color="Color.Error" Origin="Origin.CenterRight">
+                        <MudText class="pr-4" Typo="Typo.caption">Offen</MudText>
+                    </MudBadge>
+                    <MudBadge Content="3"  Origin="Origin.CenterRight">
+                        <MudText class="pr-4" Typo="Typo.caption">Entwürfe</MudText>
+                    </MudBadge>
+                </MudStack>
+            </MudButton>
         </MudPaper>
     </MudItem>
-
-    <MudItem xs="6">
-        <MudPaper Height="30vh" Style="display: flex; align-items: center; justify-content: center;" Outlined Elevation="0">
-            <MudText>
-                   Zu Prüfen
-            </MudText>
+    <MudItem xs="6" class="fade-in duration-2">
+        <MudPaper Height="30vh" Outlined="true" Elevation="0" Style="display: flex;">
+            <MudButton Href="document-overview-pending" FullWidth="true" Style="height: 100%;" Color="Color.Transparent" Variant="Variant.Text" DropShadow="false">
+                <MudBadge Content="3" Color="Color.Error">
+                    <MudText>Zu Prüfen</MudText>
+                </MudBadge>
+            </MudButton>
         </MudPaper>
     </MudItem>
-
-    <MudItem xs="6">
-        <MudPaper Height="30vh" Style="display: flex; align-items: center; justify-content: center;" Outlined Elevation="0">
-            <MudText>
-                   Alle Anträge
-            </MudText>
+    <MudItem xs="6" class="fade-in duration-3">
+        <MudPaper Height="30vh" Outlined="true" Elevation="0" Style="display: flex;">
+            <MudButton Href="document-overview" FullWidth="true" Style="height: 100%;" Color="Color.Transparent" Variant="Variant.Text" DropShadow="false">
+                <MudText> Alle Anträge</MudText>
+            </MudButton>
         </MudPaper>
     </MudItem>
-
-    <MudItem xs="6">
-        <MudPaper Height="30vh" Style="display: flex; align-items: center; justify-content: center;" Outlined Elevation="0">
-            <MudText>
-                Gesamte Historie
-            </MudText>
+    <MudItem xs="6" class="fade-in duration-4">
+        <MudPaper Height="30vh" Outlined="true" Elevation="0" Style="display: flex;">
+            <MudButton FullWidth="true" Style="height: 100%;" Color="Color.Transparent" Variant="Variant.Text" DropShadow="false">
+                <MudText> Gesamte Historie</MudText>
+            </MudButton>
         </MudPaper>
     </MudItem>
-
 </MudGrid>

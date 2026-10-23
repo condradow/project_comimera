@@ -1,26 +1,23 @@
-﻿
-<MudNavMenu>
+﻿<MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-    <MudNavLink Href="document-overview" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.EditNote">Meine Anträge</MudNavLink>
-        <MudBadge Content="3" Overlap="true" >
-    <MudNavLink Href="document-overview" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.EditNote">Zu Prüfen/noch Offen</MudNavLink>
-    </MudBadge>
-
-    <MudNavGroup Title="Administrativ">
-        <MudNavLink Href="document-overview" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">document-overview</MudNavLink>
-
-    </MudNavGroup>
+    <MudNavLink Href="document-overview" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Notes">Alle Anträge</MudNavLink>
+    <MudNavLink Href="document-overview-personal" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.EditNote">Meine Anträge</MudNavLink>
+    <MudNavLink style="width:100%" Href="document-overview-pending" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.PlaylistAddCheck">
+        <MudBadge Content="3" Overlap="true" Color="Color.Error" Origin="Origin.TopRight">
+            <MudText class="pr-8">
+                Zu Prüfen
+            </MudText>
+        </MudBadge>
+    </MudNavLink>
+  
     <MudNavGroup Title="Vorlagen">
         <MudNavLink Href="create-new-template" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Neue Vorlage anlegen</MudNavLink>
         <MudNavLink Href="template-overview" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Vorlagen Übersicht</MudNavLink>
     </MudNavGroup>
-
     <MudNavGroup Title="General">
         <MudNavLink Href="login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Login</MudNavLink>
         <MudNavLink Href="TestPage" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Test</MudNavLink>
-
     </MudNavGroup>
-
     document-overview
 </MudNavMenu>
 

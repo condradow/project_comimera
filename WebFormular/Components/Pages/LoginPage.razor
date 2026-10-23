@@ -27,6 +27,8 @@
                           InputType="InputType.Email"
                           Required="true"
                           RequiredError="Bitte E-Mail eingeben"
+                          Validation="@(new EmailAddressAttribute {
+                                  ErrorMessage = "Ungültige E-Mail-Adresse" })"
                           Class="mb-4" />
 
             <MudTextField @bind-Value="_password"
@@ -144,8 +146,19 @@
     {
         await _form!.Validate();
 
+        // Debug
+        Console.WriteLine($"Login Test");
+
         if (!_form.IsValid)
+        {
+            string [] errors = _form.Errors;
+
+            foreach(string error in errors)
+            {
+                Console.WriteLine($"Validation error: {error}");
+            }
             return;
+        }
 
         _isLoading = true;
 

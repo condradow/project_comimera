@@ -1,0 +1,112 @@
+﻿
+/* Apple-inspired Typography */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Cards / Paper */
+.mud-paper {
+    border-radius: 16px;
+}
+
+/* Buttons */
+.mud-button-root {
+    border-radius: 12px;
+    text-transform: none;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    box-shadow: none;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .mud-button-root:hover {
+        box-shadow: none;
+    }
+
+    .mud-button-root:active {
+        transform: scale(0.98);
+    }
+
+/* Input Fields */
+.mud-input-control {
+    border-radius: 12px;
+}
+
+/* Tables */
+.mud-table {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Drawer */
+.mud-drawer {
+}
+
+/* Appbar */
+.mud-appbar {
+    box-shadow: none;
+   
+}
+
+/* Smooth Hover */
+.mud-nav-link {
+   
+  
+    transition: background-color 0.2s ease;
+}
+
+/* Smooth color changes */
+body,
+.mud-paper,
+.mud-drawer,
+.mud-nav,
+.mud-paper,
+.mud-nav-link,
+.mud-appbar {
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
+
+
+/* Fade In */
+.fade-in {
+    animation: fadeIn 0.4s ease-in-out forwards;
+}
+
+/* Fade Out */
+.fade-out {
+    animation: fadeOut 0.4s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}

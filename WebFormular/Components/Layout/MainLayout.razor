@@ -7,25 +7,19 @@
 <MudLayout>
     <MudAppBar Elevation="0">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h5" Class="ml-3">WebFormular</MudText>
+        <MudText Typo="Typo.h5" Class="@(_drawerOpen ? "fade-in" : "fade-out")">WebFormular CoMiMeRa</MudText>
         <MudSpacer />
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
     </MudAppBar>
-    <MudDrawer id="nav-drawer" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2" >
+    <MudDrawer id="nav-drawer" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="0" >
         <NavMenu />
     </MudDrawer>
     <MudMainContent Class="pt-16 pa-4">
         @Body
     </MudMainContent>
 </MudLayout>
-
-
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
-
-
-
-

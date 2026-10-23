@@ -1,0 +1,112 @@
+﻿@page "/document-historys"
+
+
+@using MudBlazor
+@using WebFormular.Classes
+<PageTitle>Dokumenthistorie</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-6">
+
+    <MudText Typo="Typo.h4" Class="mb-2">
+        Dokumenthistorie
+    </MudText>
+
+    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-4">
+        Übersicht aller Aktivitäten an Dokumenten
+    </MudText>
+    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+        <MudButton Variant="@GetVariant("Alle")"
+                   Color="Color.Primary"
+                   OnClick="@(() => SelectedHistory = "Alle")">
+            Alle
+        </MudButton>
+
+        <MudButton Variant="@GetVariant("Bearbeitet")"
+                   Color="Color.Primary"
+                   OnClick="@(() => SelectedHistory = "Bearbeitet")">
+            Von mir zuletzt bearbeitet
+        </MudButton>
+
+        <MudButton Variant="@GetVariant("Erstellt")"
+                   Color="Color.Primary"
+                   OnClick="@(() => SelectedHistory = "Erstellt")">
+            Von mir erstellte
+        </MudButton>
+    </MudStack>
+
+    <MudTable T="DocumentHistory"
+              Items="@HistoryEntries"
+              Hover="true"
+              Striped="true"
+              Dense="true"
+              Bordered="true"
+              Elevation="1">
+
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel T="DocumentHistory"
+                                   SortBy="@(x => x.UserName)">
+                    Benutzername
+                </MudTableSortLabel>
+            </MudTh>
+
+            <MudTh>
+                <MudTableSortLabel T="DocumentHistory"
+                                   SortBy="@(x => x.DocumentName)">
+                    Dokumentname
+                </MudTableSortLabel>
+            </MudTh>
+
+            <MudTh>
+                <MudTableSortLabel T="DocumentHistory"
+                                   SortBy="@(x => x.Activity)">
+                    Tätigkeit
+                </MudTableSortLabel>
+            </MudTh>
+
+            <MudTh>
+                <MudTableSortLabel T="DocumentHistory"
+                                   SortBy="@(x => x.Timestamp)"
+                                   InitialDirection="SortDirection.Descending">
+                    Datum / Uhrzeit
+                </MudTableSortLabel>
+            </MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="Benutzername">
+                @context.UserName
+            </MudTd>
+
+            <MudTd DataLabel="Dokumentname">
+                @context.DocumentName
+            </MudTd>
+
+            <MudTd DataLabel="Tätigkeit">
+                <MudChip T="string"
+                         Size="Size.Small"
+                         Color="@GetActivityColor(context.Activity)"
+                         Variant="Variant.Outlined">
+                    @context.Activity
+                </MudChip>
+            </MudTd>
+
+            <MudTd DataLabel="Datum / Uhrzeit">
+                @context.Timestamp.ToString("dd.MM.yyyy HH:mm")
+            </MudTd>
+        </RowTemplate>
+
+        <NoRecordsContent>
+            <MudText Class="pa-4">
+                Es sind keine Historieneinträge vorhanden.
+            </MudText>
+        </NoRecordsContent>
+
+        <PagerContent>
+            <MudTablePager PageSizeOptions="@(new int[] { 10, 25, 50 })" />
+        </PagerContent>
+
+    </MudTable>
+
+</MudContainer>
+

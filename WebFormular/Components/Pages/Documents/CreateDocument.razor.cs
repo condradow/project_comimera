@@ -10,7 +10,7 @@ using WebFormular.Classes.Elements.OffSiteSchoolEvent;
 using WebFormular.Classes.Elements.OtherSchoolEvent;
 using WebFormular.Classes.Elements.TeachingAbsenceReason;
 
-namespace WebFormular.Components.Pages
+namespace WebFormular.Components.Pages.Documents
 {
     public partial class CreateDocument
     {

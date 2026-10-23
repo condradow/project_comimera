@@ -1,0 +1,59 @@
+﻿@page "/document-overview-personal/create"
+@using WebFormular.Classes
+@using WebFormular.Components.Pages.Documents
+@using WebFormular.Components.UI
+@using WebFormular.Services
+@inject NavigationManager NavigationManager
+@inject DatabaseContext DbContext
+
+@if (!FillOutMode)
+{
+    <MudGrid style="height:100%" class="pa-4">
+        <MudItem xs="6">
+            <MudTable Items="@Documents" T="DocumentBase" Elevation="0" OnRowClick="SelectRow" Hover="true" Bordered="false" Dense RowClassFunc="@RowClassFunc" RowEvents="@RowEvents">
+                <HeaderContent>
+                    <MudTh>Titel</MudTh>
+                    <MudTh>Beschreibung</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Titel">
+                        <MudText Typo="Typo.body1">
+                            @context.Title
+                        </MudText>
+                       
+                    </MudTd>
+                    <MudTd DataLabel="Beschreibung">
+                        <MudText Typo="Typo.caption" Color="Color.Secondary">
+                            @context.Description
+                        </MudText>
+                    </MudTd>
+       
+                </RowTemplate>
+
+                <NoRecordsContent>
+                    <MudText Class="pa-4">
+                        Keine Dokumente vorhanden.
+                    </MudText>
+                </NoRecordsContent>
+
+            </MudTable>
+        </MudItem>
+        <MudItem xs="6">
+            @if (SelectedDocument is not null)
+            {
+                <MudPaper Class="d-flex flex-grow-1 flex-direction-collumn"  Elevation="0">
+                    <DocumentPreviewComponent Document="SelectedDocument"></DocumentPreviewComponent>
+                </MudPaper>
+                <MudText>@SelectedDocument.Title</MudText>
+                <MudText>@SelectedDocument.Description</MudText>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="ToggleFillOutMode">Ausfüllen</MudButton>
+
+            }
+        </MudItem>
+    </MudGrid>
+}
+else
+{
+    <FillOutPage Document="SelectedDocument"></FillOutPage>
+    <MudButton Variant="Variant.Filled" OnClick="ToggleFillOutMode">zurück</MudButton>
+}

@@ -1,0 +1,56 @@
+﻿@page "/login"
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="login-container">
+    <MudPaper Elevation="0" Class="pa-8 login-card">
+     
+        <MudForm @ref="_form">
+            <MudTextField @bind-Value="_email"Label="E-Mail"Variant="Variant.Outlined"Adornment="Adornment.End"AdornmentIcon="@Icons.Material.Filled.Email"InputType="InputType.Email"Required="true"RequiredError="Bitte E-Mail eingeben"Class="mb-4" />
+            <MudTextField @bind-Value="_password" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" AdornmentAriaLabel="Show Password" />
+        
+
+            <div class="d-flex justify-end mb-5">
+                <MudLink Href="/forgot-password">Passwort vergessen?</MudLink>
+            </div>
+            <MudButton Variant="Variant.Filled"Color="Color.Primary"Size="Size.Large"FullWidth="true"OnClick="Login"Disabled="_isLoading">
+                @if (_isLoading)
+                {
+                    <MudProgressCircular Class="mr-2"Size="Size.Small"Indeterminate="true" />
+                    <span>Anmelden...</span>
+                }
+                else
+                {
+                    <span>Anmelden</span>
+                }
+            </MudButton>
+        </MudForm>
+
+       
+    </MudPaper>
+</MudContainer>
+
+<style>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 440px;
+        border-radius: 16px;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 24px 0;
+    }
+
+    .divider .mud-divider {
+        flex: 1;
+    }
+</style>
+

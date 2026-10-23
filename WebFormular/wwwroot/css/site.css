@@ -110,3 +110,44 @@ body,
         transform: translateY(10px);
     }
 }
+
+.duration-1 {
+    animation-duration: 0.4s;
+}
+
+.duration-2 {
+    animation-duration: 0.5s;
+}
+
+.duration-3 {
+    animation-duration: 0.6s;
+}
+
+.duration-4 {
+    animation-duration: 0.7s;
+}
+
+.duration-5 {
+    animation-duration: 2.0s;
+}
+
+/* Zeitliche Verzögerungen */
+.delay-1 {
+    animation-delay: 0.1s;
+}
+
+.delay-2 {
+    animation-delay: 0.2s;
+}
+
+.delay-3 {
+    animation-delay: 0.3s;
+}
+
+.delay-4 {
+    animation-delay: 0.4s;
+}
+
+.delay-5 {
+    animation-delay: 0.5s;
+}

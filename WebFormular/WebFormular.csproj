@@ -14,9 +14,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
     <PackageReference Include="MudBlazor" Version="9.*" />
   </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="Components\Pages\CreationPage\" />
-  </ItemGroup>
 </Project>

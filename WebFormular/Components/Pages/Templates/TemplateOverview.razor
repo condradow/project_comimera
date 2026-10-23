@@ -2,96 +2,30 @@
 @using WebFormular.Classes
 @using WebFormular.Components.UI
 @using WebFormular.Services
-@inject DatabaseContext DbContext 
-<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-8">
-
-    <MudStack Row="true"
-              Justify="Justify.SpaceBetween"
-              AlignItems="AlignItems.Center"
-              Class="mb-6">
-
-        <div>
-            <MudText Typo="Typo.h4">
-                Dokumente
-            </MudText>
-
-            <MudText Typo="Typo.body2" Color="Color.Secondary">
-                Übersicht aller vorhandenen Dokumente
-            </MudText>
-        </div>
-
-        <MudButton Variant="Variant.Filled"
-                   Color="Color.Primary"
-                   StartIcon="@Icons.Material.Filled.Add"
-                   Href="/document/new">
-            Neues Dokument
-        </MudButton>
-
-    </MudStack>
-
+@inject DatabaseContext DbContext
+<MudFab StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Href="/create-new-template" Label="Neu" Style="    position: fixed !important; bottom: 24px;right: 24px;z-index: 1000;">
+</MudFab>
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-8 fade-in pb-16">
     <MudPaper Elevation="1" Class="pa-4">
-
-        <MudTextField @bind-Value="SearchString"
-                      Placeholder="Dokumente durchsuchen..."
-                      Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search"
-                      Immediate="true"
-                      Clearable="true"
-                      Class="mb-4" />
-
-        <MudDataGrid T="DocumentBase"
-                     Items="@Documents"
-                     Filterable="true"
-                     SortMode="SortMode.Multiple"
-                     FilterMode="DataGridFilterMode.ColumnFilterMenu"
-                     Dense="true"
-                     Hover="true"
-                     Striped="false"
-                     QuickFilter="@QuickFilter">
-
+        <MudTextField @bind-Value="SearchString" Placeholder="Vorlagen durchsuchen..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" Clearable="true" Class="mb-4" />
+        <MudDataGrid T="DocumentBase" Items="@Documents" Filterable="true" SortMode="SortMode.Multiple" FilterMode="DataGridFilterMode.ColumnFilterMenu" Dense="true" Hover="true" Striped="false" QuickFilter="@QuickFilter">
             <Columns>
-
-                <PropertyColumn Property="x => x.Title"
-                                Title="Titel" />
-
-                <PropertyColumn Property="x => x.Teacher"
-                                Title="Lehrer" />
-
-                <PropertyColumn Property="x => x.CreatedOn"
-                                Title="Erstellt"
-                                Format="dd.MM.yyyy HH:mm" />
-
-                <PropertyColumn Property="x => x.ModifiedOn"
-                                Title="Bearbeitet"
-                                Format="dd.MM.yyyy HH:mm" />
-
-              
-
+                <PropertyColumn Property="x => x.Title" Title="Titel" />
+                <PropertyColumn Property="x => x.Teacher" Title="Lehrer" />
+                <PropertyColumn Property="x => x.CreatedOn" Title="Erstellt" Format="dd.MM.yyyy HH:mm" />
+                <PropertyColumn Property="x => x.ModifiedOn" Title="Bearbeitet" Format="dd.MM.yyyy HH:mm" />
                 <TemplateColumn Title="Status">
                     <CellTemplate>
                         <StatusComponent Document="@context.Item" />
-
                     </CellTemplate>
                 </TemplateColumn>
-
-                
-
             </Columns>
-
-            <PagerContent>
-                <MudDataGridPager T="DocumentBase" />
-            </PagerContent>
-
+           
             <NoRecordsContent>
                 <MudText Class="pa-4">
                     Keine Dokumente gefunden.
                 </MudText>
             </NoRecordsContent>
-
         </MudDataGrid>
-
     </MudPaper>
-
-</MudContainer> 
-
-                      
+</MudContainer>

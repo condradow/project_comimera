@@ -1,12 +1,18 @@
 ﻿@page "/login"
 
+@attribute [AllowAnonymous]
+
 <MudContainer MaxWidth="MaxWidth.Small" Class="login-container">
     <MudPaper Elevation="0" Class="pa-8 login-card">
      
-        <MudForm @ref="_form">
-            <MudTextField @bind-Value="_email"Label="E-Mail"Variant="Variant.Outlined"Adornment="Adornment.End"AdornmentIcon="@Icons.Material.Filled.Email"InputType="InputType.Email"Required="true"RequiredError="Bitte E-Mail eingeben"Class="mb-4" />
+        <MudForm @ref="_form" OnEnterPressed="Login">
+            <MudTextField @bind-Value="_username"Label="Benutzername"Variant="Variant.Outlined"Adornment="Adornment.End"AdornmentIcon="@Icons.Material.Filled.AccountBox"InputType="InputType.Text"Required="true"RequiredError="Bitte Benutzername eingeben"Class="mb-4" />
             <MudTextField @bind-Value="_password" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" AdornmentAriaLabel="Show Password" />
-        
+            @if (!string.IsNullOrEmpty(_loginError))
+            {
+                <MudText Color="Color.Error" Class="mt-2">@_loginError</MudText>
+            }
+   
 
             <div class="d-flex justify-end mb-5">
                 <MudLink Href="/forgot-password">Passwort vergessen?</MudLink>

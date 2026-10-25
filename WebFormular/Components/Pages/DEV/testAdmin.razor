@@ -1,0 +1,7 @@
+﻿@page "/dev-testAdmin-page"
+
+@* allows access only for administrators (debug) *@
+@attribute [Authorize(Roles = "testAdmin")]
+
+<MudText>authorized to enter page</MudText>
+

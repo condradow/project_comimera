@@ -1,9 +1,9 @@
 
+using Microsoft.JSInterop;
 using MudBlazor;
-
 namespace WebFormular.Components.Layout
 {
-    public partial class MainLayout
+    public partial class MainLayout(IJSRuntime JS)
     {
         private bool _drawerOpen = true;
         private bool _isDarkMode = true;
@@ -47,14 +47,39 @@ namespace WebFormular.Components.Layout
             };
         }
 
+        // Restores dark mode setting
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (!firstRender)
+                return;
+
+            var savedMode = await JS.InvokeAsync<string?>(
+                "localStorage.getItem",
+                "CoMiMeRa.DarkMode");
+
+            if (bool.TryParse(savedMode, out bool darkMode))
+            {
+                if (_isDarkMode != darkMode)
+                {
+                    _isDarkMode = darkMode;
+                    StateHasChanged();
+                }
+            }
+        }
+
         private void DrawerToggle()
         {
             _drawerOpen = !_drawerOpen;
         }
 
-        private void DarkModeToggle()
+        private async Task DarkModeToggle()
         {
             _isDarkMode = !_isDarkMode;
+
+            await JS.InvokeVoidAsync(
+                "localStorage.setItem",
+                "CoMiMeRa.DarkMode",
+                _isDarkMode.ToString());
         }
 
         // Apple-inspired Light Mode

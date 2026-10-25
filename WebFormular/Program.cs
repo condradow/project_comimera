@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using MudBlazor.Services;
 using System.Security.Claims;
@@ -37,6 +38,7 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
+
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddAntiforgery();
@@ -87,13 +89,15 @@ app.MapGet("/auth/antiforgery",
         {
             token = tokens.RequestToken
         });
-    });
+    }).AllowAnonymous();
+
 
 // Add middleware to handle login requests
+// Login endpoint
 app.MapPost("/auth/login", async (
     HttpContext context,
     IAntiforgery antiforgery,
-    LoginRequest request,
+    UserLoginRequest request,
     UserRepository userRepository) =>
 {
     try
@@ -106,11 +110,15 @@ app.MapPost("/auth/login", async (
     }
 
     var user = await userRepository.ValidateCredentialsAsync(
-        request.Email,
+        request.Username,
         request.Password);
 
     if (user is null)
-        return Results.Unauthorized();
+    {
+        return Results.Problem(
+            statusCode: StatusCodes.Status401Unauthorized,
+            title: "Ungültige Anmeldedaten");
+    }
 
     var claims = new List<Claim>
     {
@@ -141,8 +149,9 @@ app.MapPost("/auth/login", async (
         });
 
     return Results.Ok();
-});
+}).AllowAnonymous();
 
+// Logout endpoint
 app.MapPost("/auth/logout", async (
     HttpContext context,
     IAntiforgery antiforgery) =>
@@ -162,8 +171,12 @@ app.MapPost("/auth/logout", async (
     return Results.Ok();
 }).RequireAuthorization();
 
-app.MapStaticAssets();
+app.MapStaticAssets().AllowAnonymous();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+// Record to represent the login request payload for user authentication instead of email authentication
+public record UserLoginRequest(string Username, string Password);
+

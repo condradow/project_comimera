@@ -1,4 +1,5 @@
-﻿<MudNavMenu>
+﻿@using Microsoft.AspNetCore.Components.Authorization
+<MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
     <MudNavLink Href="document-overview" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Notes">Alle Anträge</MudNavLink>
     <MudNavLink Href="document-overview-personal" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.EditNote">Meine Anträge</MudNavLink>
@@ -11,8 +12,13 @@
     </MudNavLink>
     <MudNavLink Href="template-overview" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Vorlagen</MudNavLink>
     <MudNavLink Href="document-historys" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.History">Dokumenten Historie</MudNavLink>
-    <MudNavGroup Title="General">
+    <MudNavGroup Title="Development">
         <MudNavLink Href="login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Login</MudNavLink>
         <MudNavLink Href="TestPage" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Test</MudNavLink>
+        <AuthorizeView Roles="testAdmin">
+            <Authorized>
+                <MudNavLink Href="dev-testAdmin-page" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">TestAdmin Page</MudNavLink>
+            </Authorized>
+        </AuthorizeView>
     </MudNavGroup>
 </MudNavMenu>

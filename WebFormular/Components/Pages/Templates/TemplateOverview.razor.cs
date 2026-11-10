@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 using WebFormular.Classes;
 
 namespace WebFormular.Components.Pages.Templates;

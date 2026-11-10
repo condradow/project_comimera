@@ -11,3 +11,9 @@
 @using WebFormular.Components
 @using WebFormular.Components.Layout
 @using SigPad
+@*/ Namespace für EmailAddressAttribute -> ist für die Validierung von E-Mail-Adressen /*@
+@using System.ComponentModel.DataAnnotations
+
+@*/ all pages are defaulted to be closed down (access only with authorisation)/*@
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "User")]

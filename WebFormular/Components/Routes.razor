@@ -1,6 +1,32 @@
-﻿<Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.DefaultPages.NotFound)">
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using WebFormular.Components.Pages.DefaultPages
+
+<Router AppAssembly="typeof(Program).Assembly"
+        NotFoundPage="typeof(Pages.DefaultPages.NotFound)">
+
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+
+        <AuthorizeRouteView RouteData="routeData"
+                            DefaultLayout="typeof(Layout.MainLayout)">
+
+            <NotAuthorized Context="authState">
+
+                @if (authState.User.Identity?.IsAuthenticated == true)
+                {
+                    <AccessDenied />
+                }
+                else
+                {
+                    <RedirectToLogin />
+                }
+
+            </NotAuthorized>
+
+        </AuthorizeRouteView>
+
+        <FocusOnNavigate RouteData="routeData"
+                         Selector="h1" />
+
     </Found>
+
 </Router>
